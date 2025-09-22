@@ -207,6 +207,7 @@ const menuItems = [
         ],
       },
       { label: "BOM", to: "/mfg/bom" },
+      { label: "LOT 조회", to: "/lots" },
       { label: "소요량계산", to: "/mfg/mrp" },
     ],
   },
