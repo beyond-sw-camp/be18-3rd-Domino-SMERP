@@ -1,30 +1,30 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Login from "@/pages/Login.vue";
-import Main from "@/pages/Main.vue";
-import Basic from "@/pages/workstation/Basic.vue";
-import Etc from "@/pages/workstation/Etc.vue";
-import Production from "@/pages/workstation/Production.vue";
-import Reports from "@/pages/workstation/Reports.vue";
-import Sales from "@/pages/workstation/Sales.vue";
-import Purchase from "@/pages/workstation/Purchase.vue";
-import User from "@/pages/users/UserPage.vue";
-import UserDetailPage from "@/pages/users/UserDetailPage.vue";
 import { useUserStore } from "@/stores/user";
+import MyInfoPage from "@/pages/MyInfoPage.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/", redirect: "/login" },
-    { path: "/login", component: Login, meta: { public: true } },
-    { path: "/home", component: Main, meta: { requiresAuth: true } },
-    { path: "/basic", component: Basic },
-    { path: "/etc", component: Etc },
-    { path: "/production", component: Production },
-    { path: "/reports", component: Reports },
-    { path: "/purchase", component: Purchase },
-    { path: "/sales", component: Sales },
-    { path: "/users", component: User },
-    { path: "/users/:userId", name: "UserDetail", component: UserDetailPage, props: true },
+    { path: "/login", component: () => import("@/pages/Login.vue"), meta: { public: true } },
+    { path: "/home", component: () => import("@/pages/Main.vue"), meta: { requiresAuth: true } },
+    { path: "/basic", component: () => import("@/pages/workstation/Basic.vue") },
+    { path: "/etc", component: () => import("@/pages/workstation/Etc.vue") },
+    { path: "/production", component: () => import("@/pages/workstation/Production.vue") },
+    { path: "/reports", component: () => import("@/pages/workstation/Reports.vue") },
+    { path: "/purchase", component: () => import("@/pages/workstation/Purchase.vue") },
+    { path: "/sales", component: () => import("@/pages/workstation/Sales.vue") },
+    { path: "/users", component: () => import("@/pages/users/UserPage.vue") },
+    { path: "/users/:userId", name: "UserDetail", component: () => import("@/pages/users/UserDetailPage.vue"), props: true },
+    { path: "/clients", component: () => import("@/pages/clients/ClientPage.vue") },
+    { path: "/clients/:clientId", name: "ClientDetail", component: () => import("@/pages/clients/ClientDetailPage.vue"), props: true },
+    { path: "/logs", component: () => import("@/pages/logs/LogPage.vue") },
+    { path: "/logs/:logId", name: "LogDetail", component: () => import("@/pages/logs/LogDetailPage.vue"), props: true },
+    { path: "/items", component: () => import("@/pages/items/ItemPage.vue") },
+    { path: "/items/:itemId", name: "ItemDetail", component: () => import("@/pages/items/ItemDetailPage.vue"), props: true },
+    { path: "/warehouses", component: () => import("@/pages/warehouses/WarehousePage.vue") },
+    { path: "/warehouses/:warehouseId", name: "WarehouseDetail", component: () => import("@/pages/warehouses/WarehouseDetailPage.vue"), props: true },
+    { path: "/my-info", component: MyInfoPage },
     { path: "/:pathMatch(.*)*", redirect: "/home" },
   ],
 });

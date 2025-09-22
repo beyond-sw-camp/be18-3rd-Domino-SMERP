@@ -30,10 +30,12 @@
                     </form>
 
                     <div class="d-flex align-items-center gap-2">
-                        <div class="avatar rounded-circle text-white d-flex align-items-center justify-content-center">
-                            {{ userInitial }}
+                        <div class="d-flex align-items-center gap-2 cursor-pointer" @click="goToMyInfo">
+                            <div class="avatar rounded-circle text-white d-flex align-items-center justify-content-center">
+                                {{ userInitial }}
+                            </div>
+                            <span class="fw-semibold d-none d-sm-inline">{{ userName }}</span>
                         </div>
-                        <span class="fw-semibold d-none d-sm-inline">{{ userName }}</span>
                         <button class="btn btn-outline-secondary btn-sm custom-btn" @click="emit('logout')">
                             로그아웃
                         </button>
@@ -46,6 +48,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
     breadcrumbs: { type: Array, default: null },
@@ -58,8 +61,14 @@ const emit = defineEmits(["search", "logout"]);
 const searchText = ref("");
 const userInitial = computed(() => (props.userName?.[0] ?? "?").toUpperCase());
 
+const router = useRouter();
+
 function onSubmitSearch() {
     emit("search", searchText.value);
+}
+
+function goToMyInfo() {
+    router.push("/my-info");
 }
 </script>
 

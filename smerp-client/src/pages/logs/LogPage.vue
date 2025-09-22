@@ -13,10 +13,8 @@
 
       <main class="content container-fluid py-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0">사용자</h5>
+          <h5 class="mb-0">로그</h5>
           <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary" @click="switchView('list')">목록</button>
-            <button class="btn btn-outline-secondary" @click="switchView('create')">추가</button>
             <button class="btn btn-primary" @click="reloadIfPossible">새로고침</button>
           </div>
         </div>
@@ -25,8 +23,6 @@
           <component
             :is="activeComp"
             ref="activeRef"
-            @cancel="switchToListView"
-            @save="handleSave"
           />
         </KeepAlive>
       </main>
@@ -44,9 +40,7 @@ import { defineAsyncComponent, shallowRef, watch } from "vue";
 
 
 const Views = {
-  list: defineAsyncComponent(() => import("@/components/users/UserListTable.vue")),
-  create: defineAsyncComponent(() => import("@/components/users/CreateUserForm.vue")),
-  detail: defineAsyncComponent(() => import("@/components/users/UserDetail.vue")),
+  list: defineAsyncComponent(() => import("@/components/logs/LogListTable.vue")),
 };
 
 const router = useRouter();
@@ -55,8 +49,8 @@ const userStore = useUserStore();
 
 const breadcrumbs = [
   { label: "HOME", to: "/home" },
-  { label: "기초관리", to: "/basic" },
-  { label: "사용자" },
+  { label: "통계 및 로그", to: "/logs" },
+  { label: "로그" },
 ];
 
 function onSelect({ section, item }) {
@@ -94,28 +88,11 @@ function updateActiveComp() {
 
 watch(() => route.query.view, updateActiveComp, { immediate: true });
 
-function switchView(key) {
-
-  router.push({ query: { view: key } });
-}
-
 /** 현재 활성 컴포넌트에 reload 메서드가 있으면 호출 */
 function reloadIfPossible() {
   activeRef.value?.reload?.();
 }
 
-function switchToListView() {
-  switchView('list');
-}
-
-function handleSave() {
-
-  switchView('list');
-
-  setTimeout(() => {
-    reloadIfPossible();
-  }, 100);
-}
 </script>
 
 <style scoped>

@@ -106,22 +106,22 @@ const menuItems = [
       {
         label: "거래처",
         children: [
-          { label: "거래처 등록", to: "/users/create" },
-          { label: "거래처 조회", to: "/users/list" },
+          { label: "거래처 등록", to: "/clients?view=create" },
+          { label: "거래처 조회", to: "/clients?view=list" },
         ],
       },
       {
         label: "창고",
         children: [
-          { label: "창고 등록", to: "/users/create" },
-          { label: "창고 조회", to: "/users/list" },
+          { label: "창고 등록", to: "/warehouses?view=create" },
+          { label: "창고 조회", to: "/warehouses?view=list" },
         ],
       },
       {
         label: "품목",
         children: [
-          { label: "품목 등록", to: "/users/create" },
-          { label: "품목 조회", to: "/users/list" },
+          { label: "품목 등록", to: "/items?view=create" },
+          { label: "품목 조회", to: "/items?view=list" },
         ],
       },
     ],
@@ -251,7 +251,7 @@ const menuItems = [
       { label: "창고 이동 현황", to: "/print/stock" },
       { label: "재고 현황", to: "/print/stock" },
       { label: "재고 수불부", to: "/print/stock" },
-      { label: "로그 목록", to: "/print/stock" },
+      { label: "로그 목록", to: "/logs" },
     ],
   },
 ];

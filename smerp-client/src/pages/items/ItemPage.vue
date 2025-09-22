@@ -13,7 +13,7 @@
 
       <main class="content container-fluid py-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0">사용자</h5>
+          <h5 class="mb-0">품목</h5>
           <div class="d-flex gap-2">
             <button class="btn btn-outline-secondary" @click="switchView('list')">목록</button>
             <button class="btn btn-outline-secondary" @click="switchView('create')">추가</button>
@@ -44,9 +44,9 @@ import { defineAsyncComponent, shallowRef, watch } from "vue";
 
 
 const Views = {
-  list: defineAsyncComponent(() => import("@/components/users/UserListTable.vue")),
-  create: defineAsyncComponent(() => import("@/components/users/CreateUserForm.vue")),
-  detail: defineAsyncComponent(() => import("@/components/users/UserDetail.vue")),
+  list: defineAsyncComponent(() => import("@/components/items/ItemListTable.vue")),
+  create: defineAsyncComponent(() => import("@/components/items/CreateItemForm.vue")),
+  detail: defineAsyncComponent(() => import("@/components/items/ItemDetail.vue")),
 };
 
 const router = useRouter();
@@ -56,7 +56,7 @@ const userStore = useUserStore();
 const breadcrumbs = [
   { label: "HOME", to: "/home" },
   { label: "기초관리", to: "/basic" },
-  { label: "사용자" },
+  { label: "품목" },
 ];
 
 function onSelect({ section, item }) {

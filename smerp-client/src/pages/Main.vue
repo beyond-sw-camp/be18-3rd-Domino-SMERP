@@ -4,8 +4,7 @@
 
     <!-- 우측 컨텐츠 -->
     <div class="flex-grow-1 d-flex flex-column">
-      <Header :notify-count="2" :user-name="userStore.name || 'Guest'" :breadcrumbs="breadcrumbs" @search="onSearch"
-        @bell="onBell" @logout="onLogout" />
+      <Header :notify-count="2" :user-name="userStore.name || 'Guest'" :breadcrumbs="breadcrumbs" @search="onSearch" @logout="onLogout" />
 
       <main class="content container-fluid py-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -91,7 +90,7 @@ const userStore = useUserStore();
 const router = useRouter();
 
 const breadcrumbs = [
-  { label: "메인"}
+  { label: "HOME"}
 ];
 
 function onSelect({ section, item }) {

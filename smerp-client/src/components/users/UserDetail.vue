@@ -39,11 +39,11 @@
             </div>
             <div class="col-md-4">
               <label class="form-label fw-bold">연락처</label>
-              <p class="form-control-static">{{ user.phone }}</p>
+              <p class="form-control-static" v-html="user.phone || '&nbsp;'"></p>
             </div>
             <div class="col-md-4">
               <label class="form-label fw-bold">부서</label>
-              <p class="form-control-static">{{ user.deptTitle }}</p>
+              <p class="form-control-static" v-html="user.deptTitle || '&nbsp;'"></p>
             </div>
           </div>
           <div class="row mb-3">
@@ -53,25 +53,25 @@
             </div>
             <div class="col-md-4">
               <label class="form-label fw-bold">거래처명</label>
-              <p class="form-control-static">{{ user.clientName }}</p>
+              <p class="form-control-static" v-html="user.companyName || '&nbsp;'"></p>
             </div>
             <div class="col-md-4">
               <label class="form-label fw-bold">주소</label>
-              <p class="form-control-static">{{ user.address }}</p>
+              <p class="form-control-static" v-html="user.address || '&nbsp;'"></p>
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-md-4">
               <label class="form-label fw-bold">주민등록번호</label>
-              <p class="form-control-static">{{ user.ssn }}</p>
+              <p class="form-control-static" v-html="user.ssn || '&nbsp;'"></p>
             </div>
             <div class="col-md-4">
               <label class="form-label fw-bold">입사일</label>
-              <p class="form-control-static">{{ user.hireDate }}</p>
+              <p class="form-control-static" v-html="user.hireDate || '&nbsp;'"></p>
             </div>
             <div class="col-md-4">
               <label class="form-label fw-bold">퇴사일</label>
-              <p class="form-control-static">{{ user.fireDate }}</p>
+              <p class="form-control-static" v-html="user.fireDate || '&nbsp;'"></p>
             </div>
           </div>
         </div>
@@ -112,8 +112,11 @@
               <p class="form-control-static">{{ editableUser.role }}</p>
             </div>
             <div class="col-md-4">
-              <label for="clientName" class="form-label fw-bold">거래처명</label>
-              <input id="clientName" v-model="editableUser.clientName" type="text" class="form-control">
+              <label for="companyName" class="form-label">거래처명</label>
+              <div class="input-group">
+                <input type="text" id="companyName" v-model="editableUser.companyName" class="form-control" readonly>
+                <button class="btn btn-outline-secondary" type="button" @click="openClientModal">거래처 찾기</button>
+              </div>
             </div>
             <div class="col-md-4">
               <label for="address" class="form-label fw-bold">주소</label>
@@ -154,6 +157,7 @@
       </div>
     </div>
   </div>
+  <ClientSearchModal ref="clientModal" @select="onClientSelect" />
 </template>
 
 <script setup>
@@ -161,6 +165,8 @@ import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import http from "@/api/http";
 import { updateUser } from "@/api/user";
+import ClientSearchModal from "@/components/clients/ClientSearchModal.vue";
+import { Modal } from 'bootstrap';
 
 const props = defineProps({
   userId: {
@@ -177,6 +183,9 @@ const error = ref(null);
 const isEditing = ref(false);
 const editableUser = ref(null);
 const showSuccessMessage = ref(false);
+
+const clientModal = ref(null);
+let modalInstance = null;
 
 async function fetchUserDetail(id) {
   loading.value = true;
@@ -195,6 +204,9 @@ async function fetchUserDetail(id) {
 onMounted(() => {
   if (props.userId) {
     fetchUserDetail(props.userId);
+  }
+  if (clientModal.value) {
+    modalInstance = new Modal(clientModal.value.$el);
   }
 });
 
@@ -216,6 +228,22 @@ function cancelEditing() {
   isEditing.value = false;
 }
 
+function openClientModal() {
+  if (modalInstance) {
+    modalInstance.show();
+  }
+}
+
+function onClientSelect(client) {
+  if (editableUser.value) {
+    editableUser.value.companyName = client.companyName;
+    editableUser.value.clientId = client.businessNumber;
+  }
+  if (modalInstance) {
+    modalInstance.hide();
+  }
+}
+
 async function saveUser() {
   if (!editableUser.value) return;
 
@@ -223,7 +251,7 @@ async function saveUser() {
   const originalUser = user.value;
   const editedUser = editableUser.value;
 
-  const editableFields = ['address', 'phone', 'deptTitle', 'fireDate', 'clientName'];
+  const editableFields = ['address', 'phone', 'deptTitle', 'fireDate', 'companyName', 'clientId'];
 
   for (const key of editableFields) {
     if (originalUser[key] !== editedUser[key]) {

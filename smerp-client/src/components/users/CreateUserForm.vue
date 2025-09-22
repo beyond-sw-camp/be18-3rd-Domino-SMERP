@@ -72,8 +72,11 @@
           </div>
 
           <div class="col-md-4">
-            <label for="companyName" class="form-label">회사명</label>
-            <input type="text" id="companyName" v-model="form.companyName" class="form-control">
+            <label for="companyName" class="form-label">거래처명</label>
+            <div class="input-group">
+              <input type="text" id="companyName" v-model="form.companyName" class="form-control" readonly>
+              <button class="btn btn-outline-secondary" type="button" @click="openClientModal">거래처 찾기</button>
+            </div>
           </div>
         </div>
 
@@ -84,11 +87,14 @@
       </form>
     </div>
   </div>
+  <ClientSearchModal ref="clientModal" @select="onClientSelect" />
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import http from "@/api/http";
+import ClientSearchModal from "@/components/clients/ClientSearchModal.vue";
+import { Modal } from 'bootstrap';
 
 const form = ref({
   name: '',
@@ -104,9 +110,33 @@ const form = ref({
   dept: '',
   role: '',
   companyName: '',
+  clientId: null,
 });
 
 const emit = defineEmits(['cancel', 'save']);
+
+const clientModal = ref(null);
+let modalInstance = null;
+
+onMounted(() => {
+  if (clientModal.value) {
+    modalInstance = new Modal(clientModal.value.$el);
+  }
+});
+
+function openClientModal() {
+  if (modalInstance) {
+    modalInstance.show();
+  }
+}
+
+function onClientSelect(client) {
+  form.value.companyName = client.companyName;
+  form.value.clientId = client.businessNumber;
+  if (modalInstance) {
+    modalInstance.hide();
+  }
+}
 
 async function submitForm() {
   try {
@@ -119,10 +149,11 @@ async function submitForm() {
       loginId: form.value.loginId,
       password: form.value.password,
       hireDate: form.value.hireDate,
-      fireDate: form.value.fireDate||null,
+      fireDate: form.value.fireDate || null,
       deptTitle: form.value.dept,
       role: form.value.role.toUpperCase(),
-      companyName: form.value.companyName||null,
+      companyName: form.value.companyName || null,
+      clientId: form.value.clientId,
     };
 
     const response = await http.post("/api/v1/users", userData);

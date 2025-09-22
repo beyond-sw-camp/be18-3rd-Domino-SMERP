@@ -7,7 +7,8 @@
                     <span class="fw-semibold fs-5">SMERP</span>
                 </div>
 
-                <button class="btn btn-outline-primary btn-sm custom-btn">가입문의</button>
+                <button class="btn btn-outline-primary btn-sm custom-btn" data-bs-toggle="modal"
+                    data-bs-target="#contactModal">가입문의</button>
             </div>
 
             <h6 class="text-muted mb-1">환영합니다</h6>
@@ -47,6 +48,40 @@
 
         <div class="login-image d-none d-md-block flex-grow-1">
             <img src="@/assets/images/login-page-image.png" alt="작업자" />
+        </div>
+
+        <!-- 모달 -->
+        <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content contact-modal">
+                    <button type="button" class="btn-close ms-auto p-3" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+
+                    <div class="text-center px-4 pb-4 pt-2">
+                        <!-- 상단 로고 라인 -->
+                        <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+                            <span class="badge rounded-2 fw-bold text-white" style="background-color:#6B9CFF;">S</span>
+                            <span class="fw-semibold">SMERP</span>
+                        </div>
+
+                        <!-- 본문 -->
+                        <i class="bi bi-info-circle fs-3 text-secondary d-block mb-2"></i>
+                        <h5 id="contactModalLabel" class="fw-bold mb-3">가입문의</h5>
+
+                        <div class="text-muted small mb-1">SMERP</div>
+                        <div class="mb-1">02-111-1111</div>
+                        <div>abc@smerp.com</div>
+
+                        <!-- 확인 버튼 -->
+                        <div class="d-grid mt-4">
+                            <button type="button" class="btn btn-primary py-2" data-bs-dismiss="modal"
+                                style="background-color:#6B9CFF; border-color:#6B9CFF;">
+                                확인
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
