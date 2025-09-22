@@ -14,3 +14,8 @@ export function fetchClientDetail(clientId) {
 export function updateClient(clientId, clientData) {
   return http.patch(`/api/v1/clients/${clientId}`, clientData);
 }
+
+// 거래처 삭제
+export function deleteClient(clientId) {
+  return http.delete(`/api/v1/clients/${clientId}`);
+}

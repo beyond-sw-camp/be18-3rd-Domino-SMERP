@@ -202,6 +202,7 @@
         <div class="d-flex justify-content-end gap-2 mt-4">
           <button type="button" class="btn btn-outline-secondary" @click="cancel">목록으로</button>
           <template v-if="!isEditing">
+            <button v-if="isAdmin" type="button" class="btn btn-danger" @click="handleDeleteClient">삭제</button>
             <button type="button" class="btn btn-primary" @click="startEditing">수정</button>
           </template>
           <template v-else>
@@ -215,14 +216,41 @@
         거래처 정보를 찾을 수 없습니다.
       </div>
     </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true" ref="deleteModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteConfirmModalLabel">거래처 삭제 확인</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            정말로 거래처를 삭제하시겠습니까?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            <button type="button" class="btn btn-danger" @click="confirmDelete">삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import http from "@/api/http";
-import { updateClient } from "@/api/client";
+import { updateClient, deleteClient } from "@/api/client";
+import { useUserStore } from '@/stores/user';
+import { Modal } from 'bootstrap';
+
+const userStore = useUserStore();
+const isAdmin = computed(() => userStore.role === '[ROLE_ADMIN]'||'[ROLE_MANAGER]');
+
+const deleteModal = ref(null);
+let modalInstance = null;
 
 const props = defineProps({
   clientId: {
@@ -257,6 +285,9 @@ async function fetchClientDetail(id) {
 onMounted(() => {
   if (props.clientId) {
     fetchClientDetail(props.clientId);
+  }
+  if (deleteModal.value) {
+    modalInstance = new Modal(deleteModal.value);
   }
 });
 
@@ -312,6 +343,24 @@ async function saveClient() {
   } catch (err) {
     console.error('Failed to update client:', err);
     error.value = '거래처 정보 수정에 실패했습니다.';
+  }
+}
+
+async function handleDeleteClient() {
+  if (modalInstance) {
+    modalInstance.show();
+  }
+}
+
+async function confirmDelete() {
+  try {
+    await deleteClient(props.clientId);
+    modalInstance.hide();
+    router.push('/clients');
+  } catch (err) {
+    console.error('Failed to delete client:', err);
+    error.value = '거래처 삭제에 실패했습니다.';
+    modalInstance.hide();
   }
 }
 
