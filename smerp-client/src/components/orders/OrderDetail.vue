@@ -79,7 +79,7 @@
             <div class="col-md-8">
                 <label class="form-label fw-bold">담당자</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" :value="editableOrder.userName" readonly>
+                    <input type="text" class="form-control" :value="`${editableOrder.userName} (${editableOrder.empNo})`" readonly>
                     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#userSearchModal">담당자 검색</button>
                 </div>
             </div>
