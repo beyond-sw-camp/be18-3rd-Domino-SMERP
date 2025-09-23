@@ -7,7 +7,7 @@
 
       <main class="content container-fluid py-3">
         <h5 class="fw-bold mb-4">판매 상세</h5>
-        <SaleDetail :document-no="route.params.soId" />
+        <SaleDetail :so-id="route.params.soId" />
       </main>
     </div>
   </div>

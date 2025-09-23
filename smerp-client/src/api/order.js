@@ -32,3 +32,7 @@ export function fetchReturnSummary() {
 export function createReturn(returnData) {
   return http.post("/api/v1/orders/returns", returnData);
 }
+
+export function updateOrder(orderId, orderData) {
+  return http.patch(`/api/v1/orders/${orderId}`, orderData);
+}

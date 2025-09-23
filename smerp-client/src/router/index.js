@@ -33,6 +33,7 @@ const router = createRouter({
     { path: "/orders/returns/summary", component: () => import("@/pages/orders/ReturnSummaryPage.vue"), meta: { requiresAuth: true } },
     { path: "/orders/returns", component: () => import("@/pages/orders/ReturnPage.vue"), meta: { requiresAuth: true } },
     { path: "/orders/:orderId", name: "OrderDetail", component: () => import("@/pages/orders/OrderDetailPage.vue"), props: true },
+    
     { path: "/my-info", component: MyInfoPage },
     { path: "/:pathMatch(.*)*", redirect: "/home" },
   ],

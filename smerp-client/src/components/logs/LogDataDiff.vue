@@ -33,12 +33,18 @@ const after = ref({});
 function parseData(dataString) {
   if (!dataString) return {};
   const obj = {};
-  const regex = /([\w-]+)=([^,)]+)/g;
-  let match;
-  while ((match = regex.exec(dataString)) !== null) {
-    obj[match[1]] = match[2];
+  // Remove leading/trailing braces if present, and split by comma
+  const cleanedString = dataString.replace(/^{|}$/g, '');
+  const pairs = cleanedString.split(', ');
+
+  for (const pair of pairs) {
+    const [key, value] = pair.split('=');
+    if (key && value) {
+      obj[key.trim()] = value.trim();
+    }
   }
 
+  // Special handling for client object if it's still a string
   if (obj.client) {
     const companyNameMatch = /companyName=([^,)]+)/.exec(obj.client);
     if (companyNameMatch) {

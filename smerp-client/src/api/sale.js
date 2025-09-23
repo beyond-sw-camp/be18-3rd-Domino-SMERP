@@ -24,3 +24,7 @@ export function deleteSale(documentNo) {
 export function getSaleSummary() {
   return http.get("/api/v1/sales-orders/summary");
 }
+
+export function updateSale(soId, saleData) {
+  return http.patch(`/api/v1/sales-orders/${soId}`, saleData);
+}
