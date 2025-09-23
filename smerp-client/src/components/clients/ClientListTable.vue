@@ -35,6 +35,14 @@
       <div v-else class="text-center text-muted">
         표시할 거래처가 없습니다.
       </div>
+
+      <div v-if="totalPages > 1" class="mt-4">
+        <Pagination
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          @page-changed="handlePageChange"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -42,17 +50,22 @@
 <script setup>
 import { ref, onMounted, defineExpose } from "vue";
 import { fetchClients } from "@/api/client";
+import Pagination from "@/components/common/Pagination.vue";
 
 const clients = ref([]);
 const loading = ref(true);
 const error = ref(null);
+const currentPage = ref(0);
+const totalPages = ref(0);
 
-async function load() {
+async function load(page = 0) {
   loading.value = true;
   error.value = null;
   try {
-    const res = await fetchClients();
+    const res = await fetchClients(page, 10);
     clients.value = res.data.content;
+    currentPage.value = res.data.page;
+    totalPages.value = res.data.totalPages;
   } catch (e) {
     console.error(e);
     error.value = "거래처 정보를 불러오는 데 실패했습니다.";
@@ -61,7 +74,11 @@ async function load() {
   }
 }
 
-onMounted(load);
+function handlePageChange(page) {
+  load(page);
+}
+
+onMounted(() => load());
 
 defineExpose({ reload: load });
 </script>

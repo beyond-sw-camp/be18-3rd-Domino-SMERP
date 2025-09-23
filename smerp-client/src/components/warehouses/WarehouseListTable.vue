@@ -66,6 +66,17 @@ async function load() {
 onMounted(load);
 
 defineExpose({ reload: load });
+
+function getWareHouseStatusClass(status) {
+  switch (status) {
+    case '예':
+      return 'badge bg-success';
+    case '불량':
+      return 'badge bg-danger';
+    default:
+      return 'badge bg-secondary';
+  }
+}
 </script>
 
 <style scoped>

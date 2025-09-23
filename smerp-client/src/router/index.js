@@ -24,6 +24,8 @@ const router = createRouter({
     { path: "/items/:itemId", name: "ItemDetail", component: () => import("@/pages/items/ItemDetailPage.vue"), props: true },
     { path: "/warehouses", component: () => import("@/pages/warehouses/WarehousePage.vue") },
     { path: "/warehouses/:warehouseId", name: "WarehouseDetail", component: () => import("@/pages/warehouses/WarehouseDetailPage.vue"), props: true },
+    { path: "/lots", component: () => import("@/pages/lots/LotPage.vue") },
+    { path: "/lots/:lotId", name: "LotDetail", component: () => import("@/pages/lots/LotDetailPage.vue"), props: true },
     { path: "/my-info", component: MyInfoPage },
     { path: "/:pathMatch(.*)*", redirect: "/home" },
   ],

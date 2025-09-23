@@ -1,8 +1,8 @@
 import http from "./http";
 
 // 거래처 목록 조회
-export function fetchClients() {
-  return http.get("/api/v1/clients");
+export function fetchClients(page = 0, size = 20) {
+  return http.get("/api/v1/clients", { params: { page, size } });
 }
 
 // 거래처 상세 조회
@@ -13,4 +13,9 @@ export function fetchClientDetail(clientId) {
 // 거래처 정보 수정
 export function updateClient(clientId, clientData) {
   return http.patch(`/api/v1/clients/${clientId}`, clientData);
+}
+
+// 거래처 삭제
+export function deleteClient(clientId) {
+  return http.delete(`/api/v1/clients/${clientId}`);
 }
