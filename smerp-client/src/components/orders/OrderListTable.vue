@@ -6,7 +6,7 @@
         <table class="table table-hover align-middle">
           <thead>
             <tr>
-              <th scope="col">문서번호</th>
+              <th scope="col">전표번호</th>
               <th scope="col">회사명</th>
               <th scope="col">상태</th>
               <th scope="col">납기일</th>
@@ -23,6 +23,9 @@
               <td colspan="9" class="text-center text-muted">주문 정보가 없습니다.</td>
             </tr>
             <tr v-for="order in orders" :key="order.orderId">
+              <td hidden>
+                {{ order.orderId }}
+              </td>
               <td>
                 {{ order.documentNo }}
               </td>
@@ -36,7 +39,7 @@
               <td>{{ order.otherItemCount }}</td>
               <td>{{ formatCurrency(order.totalAmount) }}</td>
               <td>{{ order.remark }}</td>
-              <td><router-link :to="`/orders/${order.orderId}`">상세보기</router-link></td>
+              <td><router-link :to="`/orders/${order.orderId}`" class="btn btn-sm btn-outline-primary">상세보기</router-link></td>
             </tr>
           </tbody>
         </table>

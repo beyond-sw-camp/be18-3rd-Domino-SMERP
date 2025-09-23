@@ -8,12 +8,12 @@
 
       <main class="content container-fluid py-3">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h5 class="fw-bold mb-0">주문 관리</h5>
+          <h5 class="fw-bold mb-0">판매 관리</h5>
           <button v-if="currentView !== 'create'" class="btn btn-primary" @click="router.push({ query: { view: 'create' } })">
-            주문 생성
+            판매 생성
           </button>
           <button v-else class="btn btn-secondary" @click="router.push({ query: { view: 'list' } })">
-            주문 목록
+            판매 목록
           </button>
         </div>
 
@@ -28,9 +28,9 @@
         </div>
 
         <div v-else>
-          <CreateOrderForm v-if="currentView === 'create'" />
+          <CreateSaleForm v-if="currentView === 'create'" />
           <div v-else>
-            <OrderListTable :orders="orders" />
+            <SaleListTable :sales="sales" />
             <Pagination
               :currentPage="currentPage"
               :totalPages="totalPages"
@@ -46,9 +46,9 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { fetchOrders } from '@/api/order';
-import OrderListTable from '@/components/orders/OrderListTable.vue';
-import CreateOrderForm from '@/components/orders/CreateOrderForm.vue';
+import { fetchSales } from '@/api/sale';
+import SaleListTable from '@/components/sales/SaleListTable.vue';
+import CreateSaleForm from '@/components/sales/CreateSaleForm.vue';
 import Pagination from '@/components/common/Pagination.vue';
 import Header from "@/components/layout/Header.vue";
 import Sidebar from "@/components/layout/Sidebar.vue";
@@ -59,7 +59,7 @@ const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 
-const orders = ref([]);
+const sales = ref([]);
 const loading = ref(true);
 const error = ref(null);
 const currentPage = ref(0);
@@ -75,17 +75,17 @@ watch(currentView, (newView) => {
     breadcrumbs.value = [
       { label: "HOME", to: "/home" },
       { label: "영업 관리", to: "#" },
-      { label: "주문", to: "/orders" },
-      { label: "주문 생성" },
+      { label: "판매", to: "/sales" },
+      { label: "판매 생성" },
     ];
     loading.value = false;
   } else {
     breadcrumbs.value = [
       { label: "HOME", to: "/home" },
       { label: "영업 관리", to: "#" },
-      { label: "주문", to: "/orders" },
+      { label: "판매", to: "/sales" },
     ];
-    loadOrders();
+    loadSales();
   }
 }, { immediate: true });
 
@@ -105,16 +105,16 @@ async function onLogout() {
   router.replace("/login");
 }
 
-async function loadOrders() {
+async function loadSales() {
   loading.value = true;
   error.value = null;
   try {
-    const response = await fetchOrders(currentPage.value, pageSize.value);
-    orders.value = response.data.content;
+    const response = await fetchSales(currentPage.value, pageSize.value);
+    sales.value = response.data.content;
     totalPages.value = response.data.totalPages;
   } catch (e) {
-    console.error('Error fetching orders:', e);
-    error.value = '주문 목록을 불러오는 데 실패했습니다.';
+    console.error('Error fetching sales:', e);
+    error.value = '판매 목록을 불러오는 데 실패했습니다.';
   } finally {
     loading.value = false;
   }
@@ -129,7 +129,7 @@ onMounted(() => {
 
 watch(currentPage, () => {
   if (currentView.value === 'list') {
-    loadOrders();
+    loadSales();
   }
 });
 </script>

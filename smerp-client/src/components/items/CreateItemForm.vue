@@ -15,22 +15,13 @@
             <input type="text" id="unit" v-model="form.unit" class="form-control" required>
           </div>
 
-          <!-- <div class="col-md-4">
-            <label for="itemStatus" class="form-label">품목상태</label>
-            <select id="itemStatus" v-model="form.itemStatus" class="form-select" required>
-              <option value="">선택하세요</option>
-              <option>원재료</option>
-              <option>부재료</option>
-              <option>반제품</option>
-              <option>제품</option>
-              <option>상품</option>
-              <option>무형상품</option>
-            </select>
-          </div> -->
-
           <div class="col-md-4">
             <label for="itemStatusId" class="form-label">품목상태구분</label>
-            <input type="text" id="itemStatusId" v-model="form.itemStatusId" class="form-control">
+            <select id="itemStatusId" v-model="form.itemStatusId" class="form-select" required>
+              <option v-for="status in itemStatusOptions" :key="status.id" :value="status.id">
+                {{ status.name }}
+              </option>
+            </select>
           </div>
 
           <div class="col-md-4">
@@ -41,9 +32,9 @@
           <div class="col-md-4">
             <label for="itemAct" class="form-label">품목활동</label>
             <select id="itemAct" v-model="form.itemAct" class="form-select" required>
-              <option value="">선택하세요</option>
-              <option>사용중</option>
-              <option>사용중지</option>
+              <option v-for="act in itemActOptions" :key="act.value" :value="act.value">
+                {{ act.name }}
+              </option>
             </select>
           </div>
 
@@ -84,7 +75,11 @@
 
           <div class="col-md-4">
             <label for="safetyStockAct" class="form-label">안전 재고 활동</label>
-            <input type="text" id="safetyStockAct" v-model="form.safetyStockAct" class="form-control">
+            <select id="safetyStockAct" v-model="form.safetyStockAct" class="form-select" required>
+              <option v-for="act in safetyStockActOptions" :key="act.value" :value="act.value">
+                {{ act.name }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -105,19 +100,37 @@ import { createItem } from "@/api/item";
 const form = ref({
   name: '',
   unit: '',
-  //itemStatus: '',
-  itemStatusId: '',
+  itemStatusId: 1,
   rfid: '',
-  itemAct: '',
+  itemAct: '사용중',
   specification: '',
-  inboundUnitPrice: null,
-  outboundUnitPrice: null,
+  inboundUnitPrice: 0,
+  outboundUnitPrice: 0,
   groupName1: '',
   groupName2: '',
   groupName3: '',
-  safetyStock: null,
-  safetyStockAct: '',
+  safetyStock: 0,
+  safetyStockAct: 'DISABLED',
 });
+
+const itemStatusOptions = [
+  { id: 1, name: '원재료' },
+  { id: 2, name: '부재료' },
+  { id: 3, name: '반제품' },
+  { id: 4, name: '제품' },
+  { id: 5, name: '상품' },
+  { id: 6, name: '무형상품' },
+];
+
+const itemActOptions = [
+  { value: 'ACTIVE', name: '사용중' },
+  { value: 'INACTIVE', name: '사용중지' },
+];
+
+const safetyStockActOptions = [
+  { value: 'ENABLED', name: '사용중' },
+  { value: 'DISABLED', name: '사용안함' },
+];
 
 const emit = defineEmits(['cancel', 'save']);
 
@@ -126,17 +139,16 @@ async function submitForm() {
     const itemData = {
       name: form.value.name,
       unit: form.value.unit,
-      //itemStatus: form.value.itemStatus,
       itemStatusId: form.value.itemStatusId,
       rfid: form.value.rfid || null,
       itemAct: form.value.itemAct,
       specification: form.value.specification || null,
-      inboundUnitPrice: form.value.inboundUnitPrice || null,
-      outboundUnitPrice: form.value.outboundUnitPrice || null,
+      inboundUnitPrice: form.value.inboundUnitPrice || 0,
+      outboundUnitPrice: form.value.outboundUnitPrice || 0,
       groupName1: form.value.groupName1 || null,
       groupName2: form.value.groupName2 || null,
       groupName3: form.value.groupName3 || null,
-      safetyStock: form.value.safetyStock || null,
+      safetyStock: form.value.safetyStock || 0,
       safetyStockAct: form.value.safetyStockAct || null,
     };
 
@@ -161,25 +173,32 @@ function cancel() {
   background: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+
 .card-body {
   padding: 24px;
 }
+
 .form-label {
   font-weight: 600;
   font-size: 0.9rem;
   color: #334155;
 }
-.form-control, .form-select {
+
+.form-control,
+.form-select {
   border-radius: 8px;
   border: 1px solid #cbd5e1;
   padding: 10px 12px;
   font-size: 0.95rem;
 }
-.form-control:focus, .form-select:focus {
+
+.form-control:focus,
+.form-select:focus {
   border-color: var(--brand, #2563eb);
   box-shadow: 0 0 0 3px var(--brand-l, #dbe7ff);
   outline: none;
 }
+
 .btn-primary {
   background: var(--brand, #2563eb);
   border: none;
@@ -187,9 +206,11 @@ function cancel() {
   padding: 10px 20px;
   font-weight: 600;
 }
+
 .btn-primary:hover {
   background: var(--brand-d, #1e40af);
 }
+
 .btn-outline-secondary {
   border-radius: 8px;
   padding: 10px 20px;
@@ -205,25 +226,32 @@ function cancel() {
   background: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+
 .card-body {
   padding: 24px;
 }
+
 .form-label {
   font-weight: 600;
   font-size: 0.9rem;
   color: #334155;
 }
-.form-control, .form-select {
+
+.form-control,
+.form-select {
   border-radius: 8px;
   border: 1px solid #cbd5e1;
   padding: 10px 12px;
   font-size: 0.95rem;
 }
-.form-control:focus, .form-select:focus {
+
+.form-control:focus,
+.form-select:focus {
   border-color: var(--brand, #2563eb);
   box-shadow: 0 0 0 3px var(--brand-l, #dbe7ff);
   outline: none;
 }
+
 .btn-primary {
   background: var(--brand, #2563eb);
   border: none;
@@ -231,9 +259,11 @@ function cancel() {
   padding: 10px 20px;
   font-weight: 600;
 }
+
 .btn-primary:hover {
   background: var(--brand-d, #1e40af);
 }
+
 .btn-outline-secondary {
   border-radius: 8px;
   padding: 10px 20px;

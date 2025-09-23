@@ -1,8 +1,8 @@
 import http from "./http";
 
 // 거래처 목록 조회
-export function fetchClients(page = 0, size = 20) {
-  return http.get("/api/v1/clients", { params: { page, size } });
+export function fetchClients(page = 0, size = 20, searchTerm = '') {
+  return http.get("/api/v1/clients", { params: { page, size, searchTerm } });
 }
 
 // 거래처 상세 조회

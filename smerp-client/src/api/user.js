@@ -1,8 +1,8 @@
 import http from "./http";
 
 // 사용자 목록 조회
-export function fetchUsers() {
-  return http.get("/api/v1/users");
+export function fetchUsers(page = 0, size = 20, searchTerm = '') {
+  return http.get("/api/v1/users", { params: { page, size, searchTerm } });
 }
 
 // 내 정보 조회

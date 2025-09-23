@@ -35,7 +35,7 @@
           <div class="row mb-3">
             <div class="col-md-4">
               <label class="form-label fw-bold">품목상태</label>
-              <p class="form-control-static">{{ item.itemStatus }}</p>
+              <p class="form-control-static">{{ getItemStatusNameById(item.itemStatusId) }}</p>
             </div>
             <div class="col-md-4">
               <label class="form-label fw-bold">RFID</label>
@@ -48,6 +48,38 @@
           </div>
           <div class="row mb-3">
             <div class="col-md-4">
+              <label class="form-label fw-bold">규격</label>
+              <p class="form-control-static">{{ item.specification }}</p>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">입고단가</label>
+              <p class="form-control-static">{{ formatCurrency(item.inboundUnitPrice) }}</p>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">출고단가</label>
+              <p class="form-control-static">{{ formatCurrency(item.outboundUnitPrice) }}</p>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-bold">안전재고</label>
+              <p class="form-control-static">{{ item.safetyStock }}</p>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">안전재고활동</label>
+              <p class="form-control-static">{{ item.safetyStockAct }}</p>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">생성일</label>
+              <p class="form-control-static">{{ item.createdAt }}</p>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-bold">수정일</label>
+              <p class="form-control-static">{{ item.updatedAt }}</p>
+            </div>
+            <div class="col-md-4">
               <label class="form-label fw-bold">그룹1</label>
               <p class="form-control-static">{{ item.groupName1 }}</p>
             </div>
@@ -55,6 +87,8 @@
               <label class="form-label fw-bold">그룹2</label>
               <p class="form-control-static">{{ item.groupName2 }}</p>
             </div>
+          </div>
+          <div class="row mb-3">
             <div class="col-md-4">
               <label class="form-label fw-bold">그룹3</label>
               <p class="form-control-static">{{ item.groupName3 }}</p>
@@ -80,8 +114,12 @@
           </div>
           <div class="row mb-3">
             <div class="col-md-4">
-              <label for="itemStatus" class="form-label fw-bold">품목상태</label>
-              <input id="itemStatus" v-model="editableItem.itemStatus" type="text" class="form-control">
+              <label for="itemStatusId" class="form-label fw-bold">품목상태</label>
+              <select id="itemStatusId" v-model="editableItem.itemStatusId" class="form-select">
+                <option v-for="status in itemStatusOptions" :key="status.id" :value="status.id">
+                  {{ status.name }}
+                </option>
+              </select>
             </div>
             <div class="col-md-4">
               <label for="rfid" class="form-label fw-bold">RFID</label>
@@ -89,14 +127,46 @@
             </div>
             <div class="col-md-4">
               <label for="itemAct" class="form-label fw-bold">품목활동</label>
-              <input id="itemAct" v-model="editableItem.itemAct" type="text" class="form-control">
+              <select id="itemAct" v-model="editableItem.itemAct" class="form-select">
+                <option v-for="act in itemActOptions" :key="act.value" :value="act.value">
+                  {{ act.name }}
+                </option>
+              </select>
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-md-4">
+              <label for="specification" class="form-label fw-bold">규격</label>
+              <input id="specification" v-model="editableItem.specification" type="text" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label for="inboundUnitPrice" class="form-label fw-bold">입고단가</label>
+              <input id="inboundUnitPrice" v-model="editableItem.inboundUnitPrice" type="number" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label for="outboundUnitPrice" class="form-label fw-bold">출고단가</label>
+              <input id="outboundUnitPrice" v-model="editableItem.outboundUnitPrice" type="number" class="form-control">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="safetyStock" class="form-label fw-bold">안전재고</label>
+              <input id="safetyStock" v-model="editableItem.safetyStock" type="number" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label for="safetyStockAct" class="form-label fw-bold">안전재고활동</label>
+              <select id="safetyStockAct" v-model="editableItem.safetyStockAct" class="form-select">
+                <option v-for="act in safetyStockActOptions" :key="act.value" :value="act.value">
+                  {{ act.name }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-4">
               <label for="groupName1" class="form-label fw-bold">그룹1</label>
               <input id="groupName1" v-model="editableItem.groupName1" type="text" class="form-control">
             </div>
+          </div>
+          <div class="row mb-3">
             <div class="col-md-4">
               <label for="groupName2" class="form-label fw-bold">그룹2</label>
               <input id="groupName2" v-model="editableItem.groupName2" type="text" class="form-control">
@@ -112,11 +182,12 @@
         <div class="d-flex justify-content-end gap-2 mt-4">
           <button type="button" class="btn btn-outline-secondary" @click="cancel">목록으로</button>
           <template v-if="!isEditing">
+            <button type="button" class="btn btn-danger" @click="handleDeleteItem" v-if="canDeleteItem">삭제</button>
             <button type="button" class="btn btn-primary" @click="startEditing">수정</button>
           </template>
           <template v-else>
             <button type="button" class="btn btn-secondary" @click="cancelEditing">취소</button>
-            <button type="button" class="btn btn-success" @click="saveItem">저장</button>
+            <button type="button" class="btn btn-primary" @click="saveItem">저장</button>
           </template>
         </div>
       </div>
@@ -129,9 +200,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { fetchItemDetail, updateItem } from "@/api/item";
+import { fetchItemDetail, updateItem, deleteItem } from "@/api/item";
+import { useUserStore } from '@/stores/user';
 
 const props = defineProps({
   itemId: {
@@ -149,6 +221,37 @@ const error = ref(null);
 const isEditing = ref(false);
 const editableItem = ref(null);
 const showSuccessMessage = ref(false);
+
+const userStore = useUserStore();
+const canDeleteItem = computed(() => {
+  const role = userStore.role;
+  return role === '[ROLE_ADMIN]' || role === '[ROLE_MANAGER]';
+});
+
+const itemStatusOptions = [
+  { id: 1, name: '원재료' },
+  { id: 2, name: '부재료' },
+  { id: 3, name: '반제품' },
+  { id: 4, name: '제품' },
+  { id: 5, name: '상품' },
+  { id: 6, name: '무형상품' },
+];
+
+function getItemStatusNameById(id) {
+  const status = itemStatusOptions.find(option => option.id === id);
+  return status ? status.name : '알 수 없음';
+}
+
+const itemActOptions = [
+  { value: 'ACTIVE', name: '사용중' },
+  { value: 'INACTIVE', name: '사용중지' },
+];
+
+
+const safetyStockActOptions = [
+  { value: 'ENABLED', name: '사용중' },
+  { value: 'DISABLED', name: '사용안함' },
+];
 
 async function loadItemDetail(id) {
   loading.value = true;
@@ -184,6 +287,21 @@ watch(() => props.itemId, (newItemId) => {
 
 function startEditing() {
   editableItem.value = JSON.parse(JSON.stringify(item.value));
+  if (item.value && item.value.itemStatusId) {
+    editableItem.value.itemStatusId = item.value.itemStatusId;
+  } else {
+    editableItem.value.itemStatusId = 1;
+  }
+  if (item.value && item.value.itemAct) {
+    editableItem.value.itemAct = item.value.itemAct;
+  } else {
+    editableItem.value.itemAct = 'ACTIVE';
+  }
+  if (item.value && item.value.safetyStockAct) {
+    editableItem.value.safetyStockAct = item.value.safetyStockAct;
+  } else {
+    editableItem.value.safetyStockAct = 'ENABLED';
+  }
   isEditing.value = true;
 }
 
@@ -202,9 +320,13 @@ async function saveItem() {
   const editableFields = [
     'name',
     'unit',
-    'itemStatus',
     'rfid',
     'itemAct',
+    'specification',
+    'inboundUnitPrice',
+    'outboundUnitPrice',
+    'safetyStock',
+    'safetyStockAct',
     'groupName1',
     'groupName2',
     'groupName3',
@@ -212,8 +334,18 @@ async function saveItem() {
 
   for (const key of editableFields) {
     if (originalItem[key] !== editedItem[key]) {
-      changedData[key] = editedItem[key];
+      if (['inboundUnitPrice', 'outboundUnitPrice', 'safetyStock'].includes(key)) {
+        changedData[key] = Number(editedItem[key]);
+      } else {
+        changedData[key] = editedItem[key];
+      }
     }
+  }
+
+  if (originalItem.itemStatusId !== editedItem.itemStatusId) {
+    changedData.itemStatusId = editedItem.itemStatusId;
+  } else if (Object.keys(changedData).length > 0 && !('itemStatusId' in changedData)) {
+    changedData.itemStatusId = editedItem.itemStatusId;
   }
 
   if (Object.keys(changedData).length === 0) {
@@ -221,6 +353,8 @@ async function saveItem() {
     editableItem.value = null;
     return;
   }
+
+  console.log('Sending changed data:', changedData);
 
   try {
     await updateItem(props.itemId, changedData);
@@ -240,6 +374,26 @@ async function saveItem() {
 
 function cancel() {
   router.push('/items');
+}
+
+async function handleDeleteItem() {
+  if (!item.value || !item.value.itemId) return;
+
+  if (confirm('정말로 이 품목을 삭제하시겠습니까?')) {
+    try {
+      await deleteItem(item.value.itemId);
+      alert('품목이 성공적으로 삭제되었습니다.');
+      router.push('/items');
+    } catch (err) {
+      console.error('Failed to delete item:', err);
+      error.value = '품목 삭제에 실패했습니다.';
+    }
+  }
+}
+
+function formatCurrency(amount) {
+  if (amount === null || amount === undefined) return '';
+  return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(amount);
 }
 </script>
 
