@@ -67,10 +67,11 @@
           <div class="row mb-3">
             <div class="col-md-4">
               <label for="active" class="form-label fw-bold">활성화</label>
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="active" v-model="editableWarehouse.active">
-                <label class="form-check-label" for="active">{{ editableWarehouse.active ? '예' : '아니오' }}</label>
-              </div>
+              <select id="active" v-model="editableWarehouse.active" class="form-select">
+                <option :value="null">-- 선택 --</option>
+                <option :value="true">예</option>
+                <option :value="false">아니오</option>
+              </select>
             </div>
             <div class="col-md-4">
               <label for="address" class="form-label fw-bold">주소</label>
@@ -86,6 +87,7 @@
         <!-- Buttons -->
         <div class="d-flex justify-content-end gap-2 mt-4">
           <button type="button" class="btn btn-outline-secondary" @click="cancel">목록으로</button>
+          <button v-if="canDelete" type="button" class="btn btn-danger" @click="handleDeleteWarehouse">삭제</button>
           <template v-if="!isEditing">
             <button type="button" class="btn btn-primary" @click="startEditing">수정</button>
           </template>
@@ -104,9 +106,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { fetchWarehouseDetail, updateWarehouse } from "@/api/warehouse";
+import { useUserStore } from '@/stores/user';
+import { fetchWarehouseDetail, updateWarehouse, deleteWarehouse } from "@/api/warehouse";
 
 const props = defineProps({
   warehouseId: {
@@ -115,6 +118,7 @@ const props = defineProps({
   },
 });
 
+const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const warehouse = ref(null);
@@ -124,6 +128,26 @@ const error = ref(null);
 const isEditing = ref(false);
 const editableWarehouse = ref(null);
 const showSuccessMessage = ref(false);
+
+const canDelete = computed(() => {
+  const role = userStore.role;
+  return role === '[ROLE_ADMIN]' || role === '[ROLE_MANAGER]';
+});
+
+async function handleDeleteWarehouse() {
+  if (!confirm('정말로 이 창고를 삭제하시겠습니까?')) {
+    return;
+  }
+
+  try {
+    await deleteWarehouse(props.warehouseId);
+    alert('창고가 성공적으로 삭제되었습니다.');
+    router.push('/warehouses');
+  } catch (err) {
+    console.error('창고 삭제 실패:', err);
+    alert('창고 삭제에 실패했습니다.');
+  }
+}
 
 async function loadWarehouseDetail(id) {
   loading.value = true;
@@ -195,7 +219,7 @@ async function saveWarehouse() {
   }
 
   try {
-    await updateWarehouse(props.warehouseId, changedData);
+    await updateWarehouse(props.warehouseId, editableWarehouse.value);
     await loadWarehouseDetail(props.warehouseId);
 
     isEditing.value = false;

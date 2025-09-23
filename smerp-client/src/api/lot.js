@@ -19,3 +19,13 @@ export function createLot(lotData) {
 export function fetchLotDetail(lotId) {
   return http.get(`/api/v1/lots/${lotId}`);
 }
+
+// 로트 정보 수정
+export function updateLot(lotId, lotData) {
+  return http.patch(`/api/v1/lots/${lotId}`, lotData);
+}
+
+// 로트 삭제
+export function deleteLot(lotId) {
+  return http.delete(`/api/v1/lots/${lotId}`);
+}

@@ -19,3 +19,8 @@ export function createWarehouse(warehouseData) {
 export function updateWarehouse(warehouseId, warehouseData) {
   return http.patch(`/api/v1/warehouses/${warehouseId}`, warehouseData);
 }
+
+// 창고 삭제
+export function deleteWarehouse(warehouseId) {
+  return http.delete(`/api/v1/warehouses/${warehouseId}`);
+}

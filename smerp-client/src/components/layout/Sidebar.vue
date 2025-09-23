@@ -146,6 +146,13 @@ const menuItems = [
           { label: "판매 현황", to: "/users/list" },
         ],
       },
+      {
+        label: "반품",
+        children: [
+          { label: "반품 등록", to: "/users/create" },
+          { label: "반품 현황", to: "/users/list" },
+        ],
+      },
     ],
   },
   {
@@ -153,9 +160,9 @@ const menuItems = [
     icon: "bi bi-bag-check",
     children: [
       {
-        label: "구매요청",
+        label: "구매",
         children: [
-          { label: "구매 등록", to: "/users/create" },
+          { label: "구매 요청", to: "/users/create" },
           { label: "구매 조회", to: "/users/list" },
           { label: "구매 현황", to: "/users/list" },
         ],
@@ -166,14 +173,6 @@ const menuItems = [
           { label: "발주 등록", to: "/users/create" },
           { label: "발주 조회", to: "/users/list" },
           { label: "발주 현황", to: "/users/list" },
-        ],
-      },
-      {
-        label: "구매",
-        children: [
-          { label: "구매 등록", to: "/users/create" },
-          { label: "구매 조회", to: "/users/list" },
-          { label: "구매 현황", to: "/users/list" },
         ],
       },
     ],
