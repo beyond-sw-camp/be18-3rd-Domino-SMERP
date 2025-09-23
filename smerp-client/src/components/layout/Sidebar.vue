@@ -133,24 +133,24 @@ const menuItems = [
       {
         label: "주문",
         children: [
-          { label: "주문 등록", to: "/users/create" },
-          { label: "주문 조회", to: "/users/list" },
-          { label: "주문 현황", to: "/users/list" },
+          { label: "주문 등록", to: "/orders?view=create" },
+          { label: "주문 조회", to: "/orders" },
+          { label: "주문 현황", to: "/orders/summary" },
         ],
       },
       {
         label: "판매",
         children: [
-          { label: "판매 등록", to: "/users/create" },
-          { label: "판매 조회", to: "/users/list" },
-          { label: "판매 현황", to: "/users/list" },
+          { label: "판매 등록", to: "/sales?view=create" },
+          { label: "판매 조회", to: "/sales" },
+          { label: "판매 현황", to: "/sales/summary" },
         ],
       },
       {
         label: "반품",
         children: [
-          { label: "반품 등록", to: "/users/create" },
-          { label: "반품 현황", to: "/users/list" },
+          { label: "반품 등록", to: "/orders/returns?view=create" },
+          { label: "반품 현황", to: "/orders/returns/summary" },
         ],
       },
     ],

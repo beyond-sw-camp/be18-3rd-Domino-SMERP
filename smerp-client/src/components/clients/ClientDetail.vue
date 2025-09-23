@@ -248,7 +248,6 @@ import { Modal } from 'bootstrap';
 
 const userStore = useUserStore();
 const isAdmin = computed(() => userStore.role === '[ROLE_ADMIN]'||'[ROLE_MANAGER]');
-
 const deleteModal = ref(null);
 let modalInstance = null;
 

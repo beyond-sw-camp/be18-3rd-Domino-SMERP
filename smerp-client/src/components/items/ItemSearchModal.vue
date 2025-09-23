@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" tabindex="-1" aria-labelledby="itemSearchModalLabel" aria-hidden="true">
+  <div class="modal fade" id="itemSearchModal" tabindex="-1" aria-labelledby="itemSearchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -19,7 +19,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in filteredItems" :key="item.itemId">
+              <tr v-if="items.length === 0">
+                <td colspan="3" class="text-center text-muted">검색 결과가 없습니다.</td>
+              </tr>
+              <tr v-for="item in items" :key="item.itemId">
                 <td>{{ item.name }}</td>
                 <td>{{ item.rfid }}</td>
                 <td>
@@ -28,6 +31,11 @@
               </tr>
             </tbody>
           </table>
+          <Pagination
+            :currentPage="currentPage"
+            :totalPages="totalPages"
+            @page-changed="handlePageChange"
+          />
         </div>
       </div>
     </div>
@@ -35,32 +43,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { fetchItems } from '@/api/item';
+import Pagination from '@/components/common/Pagination.vue';
 
 const items = ref([]);
 const searchTerm = ref('');
+const currentPage = ref(0);
+const totalPages = ref(0);
+const pageSize = ref(10);
 
 const emit = defineEmits(['select']);
 
 async function loadItems() {
   try {
-    // Fetch all items, assuming the list is not excessively long.
-    // For very large datasets, server-side searching would be better.
-    const response = await fetchItems(0, 1000); // Fetch up to 1000 items
+    const response = await fetchItems(currentPage.value, pageSize.value, searchTerm.value);
     items.value = response.data.content;
+    totalPages.value = response.data.totalPages;
   } catch (error) {
     console.error('Error fetching items:', error);
   }
 }
 
-const filteredItems = computed(() => {
-  if (!searchTerm.value) {
-    return items.value;
-  }
-  return items.value.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-  );
+watch(searchTerm, () => {
+  currentPage.value = 0;
+  loadItems();
 });
 
 function selectItem(item) {
@@ -68,7 +75,11 @@ function selectItem(item) {
 }
 
 function onSearch() {
-  // The computed property will automatically update the list
+}
+
+function handlePageChange(page) {
+  currentPage.value = page;
+  loadItems();
 }
 
 onMounted(() => {
