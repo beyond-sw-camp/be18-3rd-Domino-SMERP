@@ -17,7 +17,6 @@
             <label for="companyName" class="form-label">거래처명</label>
             <div class="input-group">
               <input type="text" id="companyName" v-model="form.companyName" class="form-control" readonly required>
-              <button type="button" class="btn btn-outline-secondary" @click="openClientSearchModal">거래처 선택</button>
             </div>
           </div>
 

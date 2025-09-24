@@ -21,8 +21,8 @@
             </div>
           </div>
           <div class="col-md-6">
-            <label for="deliveryDate" class="form-label">요청 날짜</label>
-            <input type="date" id="deliveryDate" v-model="form.documentNo" class="form-control" required>
+            <label for="documentNo" class="form-label">요청 날짜</label>
+            <input type="date" id="documentNo" v-model="form.documentNo" class="form-control" required>
           </div>
           <div class="col-md-6">
             <label for="deliveryDate" class="form-label">납기희망일</label>
