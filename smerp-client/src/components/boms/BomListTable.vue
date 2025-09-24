@@ -3,26 +3,22 @@
     <div class="card-body">
       <h5 class="card-title mb-4">BOM 조회</h5>
 
-      <!-- 토글 버튼 -->
       <div class="d-flex justify-content-end mb-3">
         <button class="btn btn-sm btn-outline-secondary" @click="showAll = !showAll">
           {{ showAll ? "전체 보기" : "BOM 등록된 것만 보기" }}
         </button>
       </div>
 
-      <!-- 로딩 -->
       <div v-if="loading" class="text-center">
         <div class="spinner-border" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
 
-      <!-- 에러 -->
       <div v-else-if="error" class="alert alert-danger">
         {{ error }}
       </div>
 
-      <!-- 테이블 -->
       <table v-else-if="filteredBoms.length > 0" class="table table-hover">
         <thead class="table-light">
         <tr>
@@ -38,7 +34,7 @@
         <tr v-for="bom in filteredBoms" :key="bom.itemId">
           <td>{{ bom.itemName }}</td>
           <td>{{ bom.specification }}</td>
-          <td>{{ bom.itemStatus }}</td>
+          <td>{{ getItemStatusDescription(bom.itemStatus) }}</td>
           <td>{{ bom.materialCount }}</td>
           <td>{{ bom.hasBom ? "등록됨" : "미등록" }}</td>
           <td>
@@ -54,12 +50,10 @@
         </tbody>
       </table>
 
-      <!-- 데이터 없음 -->
       <div v-else class="text-muted text-center">
         표시할 BOM이 없습니다.
       </div>
 
-      <!-- 페이지네이션 -->
       <Pagination
           v-if="totalPages > 1"
           :current-page="currentPage"
@@ -67,7 +61,6 @@
           @page-changed="goToPage"
       />
 
-      <!-- BOM 모달 -->
       <BomAllModal ref="bomAllModal" :item-id="selectedItemId" />
     </div>
   </div>
@@ -85,7 +78,7 @@ const error = ref(null);
 const currentPage = ref(0);
 const totalPages = ref(0);
 
-const showAll = ref(false); // ✅ 필터 상태
+const showAll = ref(false);
 
 const selectedItemId = ref(null);
 const bomAllModal = ref(null);
@@ -108,6 +101,19 @@ async function load(page = 0) {
   } finally {
     loading.value = false;
   }
+}
+
+// 품목구분 영어 한글로 매핑
+function getItemStatusDescription(status) {
+  const statusMap = {
+    RAW_MATERIAL: "원재료",
+    AUXILIARY_MATERIAL: "부재료",
+    SEMI_FINISHED_PRODUCT: "반제품",
+    FINISHED_PRODUCT: "제품",
+    MERCHANDISE: "상품",
+    INTANGIBLE_GOODS: "무형상품"
+  };
+  return statusMap[status] || status; // 매핑된 값이 없으면 원래 값 반환
 }
 
 function goToPage(page) {

@@ -55,11 +55,28 @@
 
           <!-- 탭별 내용 -->
           <div v-else>
-            <!-- 정전개 -->
             <div v-if="selectedTab === 'inbound' && bomData?.inbound">
-              <BomTree :node="bomData.inbound" :expand-all="expandAll" class="bom-tree" />
+              <table class="table table-sm table-striped table-hover align-middle">
+                <thead class="table-light">
+                <tr>
+                  <th>품목명</th>
+                  <th class="text-end">소요량</th>
+                  <th class="text-end">단가</th>
+                  <th class="text-end">총 원가</th>
+                  <th class="text-center">계층</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(node, idx) in flattenBomTree(bomData.inbound)" :key="idx">
+                  <td :style="{ 'padding-left': `${node.depth * 20 + 8}px` }">{{ node.itemName }}</td>
+                  <td class="text-end">{{ node.qty }}</td>
+                  <td class="text-end">{{ formatCurrency(node.unitCost) }}</td>
+                  <td class="text-end">{{ formatCurrency(node.totalCost) }}</td>
+                  <td class="text-center">{{ node.depth }}</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
-
             <!-- 역전개 -->
             <div v-else-if="selectedTab === 'outbound' && bomData?.outbound">
               <table class="table table-sm table-striped table-hover align-middle">
@@ -98,6 +115,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="(mat, idx) in bomData.rawMaterials" :key="idx">
+<!--                  <td>{{ mat.itemId }}</td>-->
                   <td>{{ mat.itemName }}</td>
                   <td class="text-end">{{ mat.qty }}</td>
                   <td class="text-end">{{ formatCurrency(mat.unitCost) }}</td>
@@ -120,7 +138,7 @@
 import { ref, onMounted } from "vue";
 import { Modal } from "bootstrap";
 import { fetchBomAll } from "@/api/bom";
-import BomTree from "@/components/boms/BomTree.vue";
+import BomTree from "@/components/boms/BomAllTree.vue";
 
 const props = defineProps({
   itemId: { type: Number, required: true },
@@ -135,13 +153,14 @@ const selectedTab = ref("inbound");
 const modalElement = ref(null);
 let bsModal = null;
 
+
 async function loadData() {
   loading.value = true;
   error.value = null;
   try {
-    const res = await fetchBomAll(props.itemId);
-    // 데이터 없을 때 null 방지
-    bomData.value = res.data ?? {};
+    const res = await fetchBomAll(props.itemId); // 이미 BomAllResponse 객체를 반환
+    // 수정된 부분: res.data가 아닌 res를 할당
+    bomData.value = res ?? {};
   } catch (e) {
     console.error(e);
     error.value = "BOM 데이터를 불러오지 못했습니다.";
@@ -149,6 +168,17 @@ async function loadData() {
     loading.value = false;
   }
 }
+
+function flattenBomTree(node, list = []) {
+  if (node) {
+    list.push(node);
+    if (node.children) {
+      node.children.forEach(child => flattenBomTree(child, list));
+    }
+  }
+  return list;
+}
+
 
 
 function formatCurrency(amount) {

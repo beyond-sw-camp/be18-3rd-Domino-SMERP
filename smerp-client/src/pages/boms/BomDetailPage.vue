@@ -1,5 +1,4 @@
 <!-- src/pages/boms/BomDetailPage.vue -->
-<!-- src/pages/boms/BomDetailPage.vue -->
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";

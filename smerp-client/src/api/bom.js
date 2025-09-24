@@ -27,9 +27,16 @@ export function fetchBomDetail(bomId, direction = "inbound") {
 }
 
 // 정전개, 역전개, 원재료리스트 조회 (선택한 품목 기준)
-export function fetchBomAll(itemId) {
-  return http.get(`/api/v1/boms/items/${itemId}/all`);
-}
+export const fetchBomAll = async (itemId) => {
+  try {
+    const response = await http.get(`/api/v1/boms/items/${itemId}/all`);
+    // response.data에는 백엔드에서 반환하는 BomAllResponse 객체가 담겨 있습니다.
+    return response.data;
+  } catch (error) {
+    console.error("fetchBomAll failed:", error);
+    throw error;
+  }
+};
 
 // BOM 소요량 산출
 export const getBomRequirements = async (itemId) => {

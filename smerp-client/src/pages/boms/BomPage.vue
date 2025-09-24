@@ -19,7 +19,7 @@
             <button class="btn btn-primary" @click="reloadIfPossible">새로고침</button>
           </div>
         </div>
-
+        <!--BOM 목록-->
         <BomListTable ref="listRef" />
       </main>
     </div>
@@ -39,10 +39,11 @@ const router = useRouter();
 const userStore = useUserStore();
 const listRef = ref(null);
 
+// 헤더
 const breadcrumbs = [
   { label: "HOME", to: "/home" },
   { label: "생산관리", to: "/production" },
-  { label: "BOM 관리" },
+  { label: "BOM 조회" },
 ];
 
 function onSelect({ section, item }) {
