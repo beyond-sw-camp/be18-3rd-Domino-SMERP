@@ -32,8 +32,9 @@ export function fetchBomAll(itemId) {
 }
 
 // BOM 소요량 산출
-export function calculateTotalQtyAndCost(itemId) {
-  return http.get(`/api/v1/boms/items/${itemId}/requirements`);
+export const getBomRequirements = async (itemId) => {
+  const response = await http.get(`/api/v1/boms/items/${itemId}/requirements`);
+  return response.data;
 }
 
 /** ===============================

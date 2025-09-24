@@ -162,7 +162,7 @@ const menuItems = [
       {
         label: "구매",
         children: [
-          { label: "구매 요청", to: "/purchase-requests?view=create" },
+          
           { label: "구매 등록", to: "/purchase-orders?view=create" },
           { label: "구매 조회", to: "/purchase-orders?view=list" },
           { label: "구매 현황", to: "/users/list" },
@@ -174,6 +174,13 @@ const menuItems = [
           { label: "발주 등록", to: "/request-orders?view=create" },
           { label: "발주 조회", to: "/request-orders?view=list" },
           { label: "발주 현황", to: "/users/list" },
+        ],
+      },
+      {
+        label: "구매요청",
+        children: [
+          { label: "구매요청 등록", to: "/purchase-requests?view=create" },
+          { label: "구매요청 조회", to: "/purchase-requests?view=list" },
         ],
       },
     ],
@@ -192,20 +199,17 @@ const menuItems = [
       {
         label: "작업 지시",
         children: [
-          { label: "작업 등록", to: "/users/create" },
-          { label: "작업 조회", to: "/users/list" },
-          { label: "작업 현황", to: "/users/list" },
+          { label: "작업 지시 등록", to: "/work-orders?view=create" },
+          { label: "작업 지시 조회", to: "/work-orders" },
+          { label: "작업 지시 현황", to: "/work-orders/status" },
         ],
       },
       {
-        label: "생산",
-        children: [
-          { label: "생산 현황", to: "/users/list" },
-        ],
+        label: "생산 실적 조회",
+        to: "/production-results",
       },
-      { label: "BOM", to: "/mfg/bom" },
       { label: "LOT 조회", to: "/lots" },
-      { label: "소요량계산", to: "/mfg/mrp" },
+      { label: "소요량계산", to: "/boms" },
     ],
   },
   {

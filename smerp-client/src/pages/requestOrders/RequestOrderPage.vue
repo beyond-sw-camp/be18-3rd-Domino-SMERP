@@ -43,7 +43,7 @@ import { useUserStore } from "@/stores/user";
 import { defineAsyncComponent, shallowRef, watch } from "vue";
 
 const Views = {
-  // list: defineAsyncComponent(() => import("@/components/requestOrders/RequestOrderListTable.vue")), // Will be created later
+  list: defineAsyncComponent(() => import("@/components/requestOrders/RequestOrderListTable.vue")),
   create: defineAsyncComponent(() => import("@/components/requestOrders/CreateRequestOrderForm.vue")),
 };
 
@@ -74,12 +74,12 @@ async function onLogout() {
 }
 
 /** 동적 컴포넌트 스위칭 */
-const activeComp = shallowRef(Views.create); // Default to create view for now
+const activeComp = shallowRef(Views.list); // Default to list view
 const activeRef = shallowRef(null);
 
 function updateActiveComp() {
-  const view = route.query.view || 'create'; // Default to create view for now
-  activeComp.value = Views[view] ?? Views.create;
+  const view = route.query.view || 'list';
+  activeComp.value = Views[view] ?? Views.list;
 }
 
 watch(() => route.query.view, updateActiveComp, { immediate: true });
@@ -90,7 +90,7 @@ function switchView(key) {
 
 /** 현재 활성 컴포넌트에 reload 메서드가 있으면 호출 */
 function reloadIfPossible() {
-  // activeRef.value?.load?.(); // No load method for create form
+  activeRef.value?.load?.(); // Assuming list component has a load method
 }
 
 function switchToListView() {
@@ -100,7 +100,7 @@ function switchToListView() {
 function handleSave() {
   switchView('list');
   setTimeout(() => {
-    // reloadIfPossible(); // No reload for list view yet
+    reloadIfPossible();
   }, 100);
 }
 </script>

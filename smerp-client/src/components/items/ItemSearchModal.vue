@@ -26,7 +26,7 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.rfid }}</td>
                 <td>
-                  <button class="btn btn-sm btn-primary" @click="selectItem(item)" data-bs-dismiss="modal">선택</button>
+                  <button class="btn btn-sm btn-primary" @click="selectItem(item)">선택</button>
                 </td>
               </tr>
             </tbody>
@@ -56,7 +56,7 @@ const pageSize = ref(10);
 const modalElement = ref(null); // Ref for the modal DOM element
 let bsModal = null; // To store the Bootstrap Modal instance
 
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'closed']);
 
 async function loadItems() {
   try {
@@ -75,6 +75,10 @@ watch(searchTerm, () => {
 
 function selectItem(item) {
   emit('select', item);
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+  bsModal?.hide();
 }
 
 function onSearch() {
@@ -90,6 +94,9 @@ onMounted(() => {
   // Initialize Bootstrap Modal once the component is mounted
   if (modalElement.value) {
     bsModal = new Modal(modalElement.value);
+    modalElement.value.addEventListener('hidden.bs.modal', () => {
+      emit('closed');
+    });
   }
 });
 

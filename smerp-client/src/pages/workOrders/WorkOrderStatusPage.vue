@@ -12,13 +12,11 @@
       />
 
       <main class="content container-fluid py-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0">구매 관리</h5>
-          <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary" @click="switchView('list')">목록</button>
-            <button class="btn btn-outline-secondary" @click="switchView('create')">추가</button>
-            <button class="btn btn-primary" @click="reloadIfPossible">새로고침</button>
-          </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="fw-bold mb-0">작업지시 현황</h5>
+          <button class="btn btn-success" @click="exportToExcel">
+            <i class="bi bi-file-earmark-excel"></i> 엑셀로 내보내기
+          </button>
         </div>
 
         <KeepAlive>
@@ -43,8 +41,7 @@ import { useUserStore } from "@/stores/user";
 import { defineAsyncComponent, shallowRef, watch } from "vue";
 
 const Views = {
-  list: defineAsyncComponent(() => import("@/components/purchaseOrders/PurchaseOrderListTable.vue")),
-  create: defineAsyncComponent(() => import("@/components/purchaseOrders/CreatePurchaseOrderForm.vue")),
+  list: defineAsyncComponent(() => import("@/components/workOrders/WorkOrderStatusTable.vue")),
 };
 
 const router = useRouter();
@@ -53,8 +50,8 @@ const userStore = useUserStore();
 
 const breadcrumbs = [
   { label: "HOME", to: "/home" },
-  { label: "구매 관리", to: "/purchase" },
-  { label: "구매" },
+  { label: "생산 관리", to: "/production" },
+  { label: "작업 지시 현황" },
 ];
 
 function onSelect({ item }) {
@@ -102,6 +99,38 @@ function handleSave() {
   setTimeout(() => {
     reloadIfPossible();
   }, 100);
+}
+
+function exportToExcel() {
+  const workOrders = activeRef.value?.workOrders;
+  if (!workOrders || workOrders.length === 0) {
+    alert("내보낼 데이터가 없습니다.");
+    return;
+  }
+
+  const headers = ["문서 번호", "회사명", "담당자", "품목명", "상태", "계획 수량", "계획일"];
+  const rows = workOrders.map(order => [
+    order.documentNo,
+    order.companyName || 'N/A',
+    order.userName,
+    order.itemName,
+    order.status,
+    order.planQty,
+    order.planAt ? order.planAt.split('T')[0] : 'N/A',
+  ]);
+
+  let csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers.join(",") + "\n";
+  rows.forEach(row => {
+    csvContent += row.join(",") + "\n";
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "작업지시현황.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 </script>
 

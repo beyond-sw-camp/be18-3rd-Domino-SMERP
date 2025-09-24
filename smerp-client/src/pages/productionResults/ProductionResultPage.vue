@@ -13,10 +13,8 @@
 
       <main class="content container-fluid py-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0">구매 관리</h5>
+          <h5 class="mb-0">생산 실적 조회</h5>
           <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary" @click="switchView('list')">목록</button>
-            <button class="btn btn-outline-secondary" @click="switchView('create')">추가</button>
             <button class="btn btn-primary" @click="reloadIfPossible">새로고침</button>
           </div>
         </div>
@@ -43,8 +41,7 @@ import { useUserStore } from "@/stores/user";
 import { defineAsyncComponent, shallowRef, watch } from "vue";
 
 const Views = {
-  list: defineAsyncComponent(() => import("@/components/purchaseOrders/PurchaseOrderListTable.vue")),
-  create: defineAsyncComponent(() => import("@/components/purchaseOrders/CreatePurchaseOrderForm.vue")),
+  list: defineAsyncComponent(() => import("@/components/productionResults/ProductionResultListTable.vue")),
 };
 
 const router = useRouter();
@@ -53,8 +50,8 @@ const userStore = useUserStore();
 
 const breadcrumbs = [
   { label: "HOME", to: "/home" },
-  { label: "구매 관리", to: "/purchase" },
-  { label: "구매" },
+  { label: "생산 관리", to: "/production" },
+  { label: "생산 실적 조회" },
 ];
 
 function onSelect({ item }) {
@@ -90,7 +87,9 @@ function switchView(key) {
 
 /** 현재 활성 컴포넌트에 reload 메서드가 있으면 호출 */
 function reloadIfPossible() {
-  activeRef.value?.load?.();
+  if (activeComp.value === Views.list) {
+    activeRef.value?.load?.();
+  }
 }
 
 function switchToListView() {
