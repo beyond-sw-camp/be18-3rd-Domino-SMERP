@@ -16,9 +16,19 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h5 class="mb-0">BOM 관리</h5>
           <div class="d-flex gap-2">
+            <button class="btn btn-primary" @click="showCreateForm = !showCreateForm">
+              {{ showCreateForm ? "목록 보기" : "BOM 신규 등록" }}
+            </button>
             <button class="btn btn-primary" @click="reloadIfPossible">새로고침</button>
           </div>
         </div>
+        <!--BOM 신규 등록-->
+        <CreateBomForm
+            v-if="showCreateForm"
+            @submit-success="onBomCreated"
+            @cancel="showCreateForm = false"
+        />
+
         <!--BOM 목록-->
         <BomListTable ref="listRef" />
       </main>
@@ -30,6 +40,7 @@
 import Header from "@/components/layout/Header.vue";
 import Sidebar from "@/components/layout/Sidebar.vue";
 import BomListTable from "@/components/boms/BomListTable.vue";
+import CreateBomForm from "@/components/boms/CreateBomForm.vue";
 import { useRouter } from "vue-router";
 import { logout as apiLogout } from "@/api/auth";
 import { useUserStore } from "@/stores/user";
@@ -38,6 +49,8 @@ import { ref } from "vue";
 const router = useRouter();
 const userStore = useUserStore();
 const listRef = ref(null);
+const showCreateForm = ref(false);
+
 
 // 헤더
 const breadcrumbs = [
@@ -64,5 +77,10 @@ async function onLogout() {
 
 function reloadIfPossible() {
   listRef.value?.reload?.();
+}
+
+function onBomCreated() {
+  showCreateForm.value = false; // 폼 숨기기
+  reloadIfPossible(); // 목록 새로고침
 }
 </script>

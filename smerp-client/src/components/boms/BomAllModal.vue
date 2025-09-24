@@ -90,7 +90,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(node, idx) in bomData.outbound" :key="idx">
+                <tr v-for="(node, idx) in flattenBomTree(bomData.outbound)" :key="idx">
                   <td>{{ node.itemName }}</td>
                   <td class="text-end">{{ node.qty }}</td>
                   <td class="text-end">{{ formatCurrency(node.unitCost) }}</td>
@@ -169,11 +169,17 @@ async function loadData() {
   }
 }
 
-function flattenBomTree(node, list = []) {
-  if (node) {
-    list.push(node);
-    if (node.children) {
-      node.children.forEach(child => flattenBomTree(child, list));
+// BomAllModal.vue 스크립트 부분
+function flattenBomTree(nodeOrNodes, list = []) {
+  // 인자가 배열이면 각 요소를 순회하여 재귀 호출
+  if (Array.isArray(nodeOrNodes)) {
+    nodeOrNodes.forEach(item => flattenBomTree(item, list));
+  }
+  // 인자가 단일 객체이면 기존 로직 실행
+  else if (nodeOrNodes) {
+    list.push(nodeOrNodes);
+    if (nodeOrNodes.children) {
+      nodeOrNodes.children.forEach(child => flattenBomTree(child, list));
     }
   }
   return list;
