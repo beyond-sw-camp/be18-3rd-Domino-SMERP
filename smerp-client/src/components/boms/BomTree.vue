@@ -20,8 +20,9 @@
 
 <script setup>
 import BomTreeNode from './BomTreeNode.vue';
+import { onMounted } from 'vue';
 
-defineProps({
+const props = defineProps({
     bomData: Object
 });
 </script>
