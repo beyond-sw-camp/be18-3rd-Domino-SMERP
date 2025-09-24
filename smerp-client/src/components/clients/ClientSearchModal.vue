@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="clientSearchModal" tabindex="-1" aria-labelledby="clientSearchModalLabel" aria-hidden="true">
+  <div class="modal fade" id="clientSearchModal" tabindex="-1" aria-labelledby="clientSearchModalLabel" aria-hidden="true" ref="modalElement">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -45,21 +45,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, defineExpose } from 'vue';
 import { fetchClients } from '@/api/client';
 import Pagination from '@/components/common/Pagination.vue';
+import { Modal } from 'bootstrap'; // Import Bootstrap's Modal
 
 const clients = ref([]);
 const searchTerm = ref('');
 const currentPage = ref(0);
 const totalPages = ref(0);
 const pageSize = ref(10);
+const modalElement = ref(null); // Ref for the modal DOM element
+let bsModal = null; // To store the Bootstrap Modal instance
 
 const emit = defineEmits(['select']);
 
 async function loadClients() {
   try {
-    const response = await fetchClients(currentPage.value, pageSize.value, searchTerm.value); // Pass searchTerm
+    const response = await fetchClients(currentPage.value, pageSize.value, searchTerm.value);
     clients.value = response.data.content;
     totalPages.value = response.data.totalPages;
   } catch (error) {
@@ -87,5 +90,16 @@ function handlePageChange(page) {
 
 onMounted(() => {
   loadClients();
+  // Initialize Bootstrap Modal once the component is mounted
+  if (modalElement.value) {
+    bsModal = new Modal(modalElement.value);
+  }
 });
+
+// Expose a method to show the modal
+const showModal = () => {
+  bsModal?.show();
+};
+
+defineExpose({ showModal });
 </script>

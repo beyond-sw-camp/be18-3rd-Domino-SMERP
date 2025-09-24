@@ -1,7 +1,6 @@
 <template>
   <div class="card shadow-sm">
     <div class="card-body">
-      <h5 class="card-title mb-4">반품 현황</h5>
 
       <div v-if="loading" class="text-center">
         <div class="spinner-border" role="status">

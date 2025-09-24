@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="warehouseSearchModal" tabindex="-1" aria-labelledby="warehouseSearchModalLabel" aria-hidden="true">
+  <div class="modal fade" id="warehouseSearchModal" tabindex="-1" aria-labelledby="warehouseSearchModalLabel" aria-hidden="true" ref="modalElement">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -47,14 +47,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
+import { ref, onMounted, defineEmits, defineExpose } from 'vue';
 import { fetchWarehouses } from '@/api/warehouse';
+import { Modal } from 'bootstrap'; // Import Bootstrap's Modal
 
 const emit = defineEmits(['select']);
 
 const warehouses = ref([]);
 const loading = ref(true);
 const error = ref(null);
+const modalElement = ref(null); // Ref for the modal DOM element
+let bsModal = null; // To store the Bootstrap Modal instance
 
 const fetchWarehouseList = async () => {
   loading.value = true;
@@ -76,7 +79,18 @@ function selectWarehouse(warehouse) {
 
 onMounted(() => {
   fetchWarehouseList();
+  // Initialize Bootstrap Modal once the component is mounted
+  if (modalElement.value) {
+    bsModal = new Modal(modalElement.value);
+  }
 });
+
+// Expose a method to show the modal
+const showModal = () => {
+  bsModal?.show();
+};
+
+defineExpose({ showModal });
 </script>
 
 <style scoped>

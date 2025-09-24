@@ -162,16 +162,17 @@ const menuItems = [
       {
         label: "구매",
         children: [
-          { label: "구매 요청", to: "/users/create" },
-          { label: "구매 조회", to: "/users/list" },
+          { label: "구매 요청", to: "/purchase-requests?view=create" },
+          { label: "구매 등록", to: "/purchase-orders?view=create" },
+          { label: "구매 조회", to: "/purchase-orders?view=list" },
           { label: "구매 현황", to: "/users/list" },
         ],
       },
       {
         label: "발주",
         children: [
-          { label: "발주 등록", to: "/users/create" },
-          { label: "발주 조회", to: "/users/list" },
+          { label: "발주 등록", to: "/request-orders?view=create" },
+          { label: "발주 조회", to: "/request-orders?view=list" },
           { label: "발주 현황", to: "/users/list" },
         ],
       },
@@ -184,9 +185,8 @@ const menuItems = [
       {
         label: "생산계획",
         children: [
-          { label: "생산 등록", to: "/users/create" },
-          { label: "생산 조회", to: "/users/list" },
-          { label: "생산 현황", to: "/users/list" },
+          { label: "생산계획 등록", to: "/plans?view=create" },
+          { label: "생산계획 조회", to: "/plans?view=list" },
         ],
       },
       {
@@ -200,8 +200,6 @@ const menuItems = [
       {
         label: "생산",
         children: [
-          { label: "생산 등록", to: "/users/create" },
-          { label: "생산 조회", to: "/users/list" },
           { label: "생산 현황", to: "/users/list" },
         ],
       },
@@ -299,6 +297,6 @@ const toggle = (key) => (isOpen(key) ? open.delete(key) : open.add(key));
 
 .no-underline {
   text-decoration: none;
-  color: inherit;   
+  color: inherit;
 }
 </style>

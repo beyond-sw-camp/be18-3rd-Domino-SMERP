@@ -1,32 +1,36 @@
 <template>
-  <div class="modal fade" id="itemSearchModal" tabindex="-1" aria-labelledby="itemSearchModalLabel" aria-hidden="true" ref="modalElement">
+  <div class="modal fade" id="requestOrderSearchModal" tabindex="-1" aria-labelledby="requestOrderSearchModalLabel" aria-hidden="true" ref="modalElement">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="itemSearchModalLabel">품목 검색</h5>
+          <h5 class="modal-title" id="requestOrderSearchModalLabel">발주 검색</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <input type="text" class="form-control" placeholder="품목명 검색" v-model="searchTerm" @input="onSearch">
+            <input type="text" class="form-control" placeholder="문서 번호 또는 회사명 검색" v-model="searchTerm" @input="onSearch">
           </div>
           <table class="table table-hover">
             <thead>
               <tr>
-                <th>품목명</th>
-                <th>RFID</th>
+                <th>발주 ID</th>
+                <th>문서 번호</th>
+                <th>회사명</th>
+                <th>납기일</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr v-if="items.length === 0">
-                <td colspan="3" class="text-center text-muted">검색 결과가 없습니다.</td>
+              <tr v-if="requestOrders.length === 0">
+                <td colspan="5" class="text-center text-muted">검색 결과가 없습니다.</td>
               </tr>
-              <tr v-for="item in items" :key="item.itemId">
-                <td>{{ item.name }}</td>
-                <td>{{ item.rfid }}</td>
+              <tr v-for="requestOrder in requestOrders" :key="requestOrder.roId">
+                <td>{{ requestOrder.roId }}</td>
+                <td>{{ requestOrder.documentNo }}</td>
+                <td>{{ requestOrder.companyName }}</td>
+                <td>{{ requestOrder.deliveryDate }}</td>
                 <td>
-                  <button class="btn btn-sm btn-primary" @click="selectItem(item)" data-bs-dismiss="modal">선택</button>
+                  <button class="btn btn-sm btn-primary" @click="selectRequestOrder(requestOrder)" data-bs-dismiss="modal">선택</button>
                 </td>
               </tr>
             </tbody>
@@ -43,12 +47,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, defineExpose } from 'vue';
-import { fetchItems } from '@/api/item';
+import { ref, onMounted, watch, defineExpose } from 'vue';
+import { fetchRequestOrders } from '@/api/requestOrder';
 import Pagination from '@/components/common/Pagination.vue';
 import { Modal } from 'bootstrap'; // Import Bootstrap's Modal
 
-const items = ref([]);
+const requestOrders = ref([]);
 const searchTerm = ref('');
 const currentPage = ref(0);
 const totalPages = ref(0);
@@ -58,35 +62,36 @@ let bsModal = null; // To store the Bootstrap Modal instance
 
 const emit = defineEmits(['select']);
 
-async function loadItems() {
+async function loadRequestOrders() {
   try {
-    const response = await fetchItems(currentPage.value, pageSize.value, searchTerm.value);
-    items.value = response.data.content;
+    const response = await fetchRequestOrders(currentPage.value, pageSize.value, searchTerm.value);
+    requestOrders.value = response.data.content;
     totalPages.value = response.data.totalPages;
   } catch (error) {
-    console.error('Error fetching items:', error);
+    console.error('Error fetching request orders:', error);
   }
 }
 
 watch(searchTerm, () => {
   currentPage.value = 0;
-  loadItems();
+  loadRequestOrders();
 });
 
-function selectItem(item) {
-  emit('select', item);
+function selectRequestOrder(requestOrder) {
+  emit('select', requestOrder);
 }
 
 function onSearch() {
+  // This function is called on input, loadRequestOrders will handle the actual search
 }
 
 function handlePageChange(page) {
   currentPage.value = page;
-  loadItems();
+  loadRequestOrders();
 }
 
 onMounted(() => {
-  loadItems();
+  loadRequestOrders();
   // Initialize Bootstrap Modal once the component is mounted
   if (modalElement.value) {
     bsModal = new Modal(modalElement.value);

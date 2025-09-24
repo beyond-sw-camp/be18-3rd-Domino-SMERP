@@ -1,7 +1,6 @@
 <template>
   <div class="card shadow-sm">
     <div class="card-body">
-      <h5 class="card-title mb-4">주문 목록</h5>
       <div class="table-responsive">
         <table class="table table-hover align-middle">
           <thead>

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="userSearchModal" tabindex="-1" aria-labelledby="userSearchModalLabel" aria-hidden="true">
+  <div class="modal fade" id="userSearchModal" tabindex="-1" aria-labelledby="userSearchModalLabel" aria-hidden="true" ref="modalElement">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -45,15 +45,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, defineExpose } from 'vue';
 import { fetchUsers } from '@/api/user';
 import Pagination from '@/components/common/Pagination.vue';
+import { Modal } from 'bootstrap';
 
 const users = ref([]);
 const searchTerm = ref('');
 const currentPage = ref(0);
 const totalPages = ref(0);
 const pageSize = ref(10);
+const modalElement = ref(null);
+let bsModal = null;
 
 const emit = defineEmits(['select']);
 
@@ -86,5 +89,14 @@ function handlePageChange(page) {
 
 onMounted(() => {
   loadUsers();
+  if (modalElement.value) {
+    bsModal = new Modal(modalElement.value);
+  }
 });
+
+const showModal = () => {
+  bsModal?.show();
+};
+
+defineExpose({ showModal });
 </script>
