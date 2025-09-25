@@ -59,7 +59,7 @@ const openModalButtonRef = ref(null);
 
 const breadcrumbs = ref([
   { label: "HOME", to: "/home" },
-  { label: "생산 관리" },
+  { label: "생산 관리", to:"/production" },
   { label: "소요량계산", to: "/boms/requirements" }
 ]);
 

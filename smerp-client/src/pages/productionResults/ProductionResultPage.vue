@@ -53,7 +53,7 @@ const activeRef = shallowRef(null);
 
 const breadcrumbs = [
   { label: "HOME", to: "/home" },
-  { label: "생산 관리", to: "#" },
+  { label: "생산 관리", to:"/production" },
   { label: "생산 실적 조회" },
 ];
 

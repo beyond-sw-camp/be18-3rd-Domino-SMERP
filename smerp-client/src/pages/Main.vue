@@ -15,7 +15,6 @@
         <!-- 메인 카드 -->
         <div class="card shadow-sm">
           <div class="card-body">
-            <h6 class="fw-bold mb-3">Workstation</h6>
             <div class="row g-3 mb-4">
               <div class="col-6 col-md-4">
                 <router-link to="/basic" class="ws-box">
@@ -23,7 +22,7 @@
                 </router-link>
               </div>
               <div class="col-6 col-md-4">
-                <router-link to="/sales" class="ws-box">
+                <router-link to="/marketing" class="ws-box">
                   영업관리
                 </router-link>
               </div>
@@ -38,11 +37,6 @@
                 </router-link>
               </div>
               <div class="col-6 col-md-4">
-                <router-link to="/etc" class="ws-box">
-                  기타관리
-                </router-link>
-              </div>
-              <div class="col-6 col-md-4">
                 <router-link to="/reports" class="ws-box">
                 통계 및 조회
                 </router-link>
@@ -50,27 +44,24 @@
             </div>
 
             <!-- Shortcuts -->
-            <h6 class="fw-bold mb-3">Your Shortcuts</h6>
+            <h6 class="fw-bold mb-3">바로가기</h6>
             <div class="row g-3">
               <div class="col-6 col-md-4">
-                <router-link to="/boms" class="ws-box">
-                  BOM ↗
-                </router-link>
+                <router-link to="/boms" class="ws-box">BOM ↗</router-link>
+                  
+              </div>
+              <div class="col-6 col-md-4"><router-link to="/boms/requirements" class="ws-box">BOM 소요량계산 ↗</router-link>
+              </div>
+              <div class="col-6 col-md-4"><router-link to="/work-orders" class="ws-box">작업지시 ↗</router-link>
               </div>
               <div class="col-6 col-md-4">
-                <div class="ws-box">Production Plan ↗</div>
+                <router-link to="/sales/summary" class="ws-box">판매현황 ↗</router-link>  
               </div>
               <div class="col-6 col-md-4">
-                <div class="ws-box">Work Order ↗</div>
+                <router-link to="/plans" class="ws-box">생산계획 ↗</router-link>  
               </div>
               <div class="col-6 col-md-4">
-                <div class="ws-box">Forecasting ↗</div>
-              </div>
-              <div class="col-6 col-md-4">
-                <div class="ws-box">BOM Stock Report ↗</div>
-              </div>
-              <div class="col-6 col-md-4">
-                <div class="ws-box">Production Planning Report ↗</div>
+                <router-link to="/production-results" class="ws-box">생산실적 ↗</router-link>  
               </div>
             </div>
           </div>

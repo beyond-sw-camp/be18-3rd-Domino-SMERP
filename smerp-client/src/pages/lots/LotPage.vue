@@ -55,7 +55,7 @@ const userStore = useUserStore();
 
 const breadcrumbs = [
   { label: "HOME", to: "/home" },
-  { label: "생산 관리", to: "#" },
+  { label: "생산 관리",to:"/production"},
   { label: "로트" },
 ];
 
