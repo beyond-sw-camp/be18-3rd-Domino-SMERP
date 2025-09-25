@@ -117,7 +117,7 @@
               </tbody>
             </table>
           </div>
-          <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#itemSearchModal">품목 추가</button>
+          <button class="btn btn-primary" type="button" @click="openItemSearchModal">품목 추가</button>
         </div>
 
         <h6 class="fw-bold mb-3 mt-4">주문 품목 (읽기 전용)</h6>
@@ -177,7 +177,7 @@
   </div>
 
   <UserSearchModal @select="onUserSelected" />
-  <ItemSearchModal @select="onItemSelected" />
+  <ItemSearchModal ref="itemSearchModal" @select="onItemSelected" />
 </template>
 
 <script setup>
@@ -203,6 +203,11 @@ const error = ref(null);
 const isEditing = ref(false);
 const editableOrder = ref(null);
 const showSuccessMessage = ref(false);
+const itemSearchModal = ref(null);
+
+function openItemSearchModal() {
+  itemSearchModal.value.showModal();
+}
 
 const canDelete = computed(() => userStore.role === '[ROLE_ADMIN]' || '[ROLE_MANAGER]');
 

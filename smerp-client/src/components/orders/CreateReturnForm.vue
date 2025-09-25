@@ -32,7 +32,7 @@
             <label :for="'itemName-' + index" class="form-label">품목명</label>
             <div class="input-group">
               <input type="text" class="form-control" :id="'itemName-' + index" :value="item.itemName" readonly required>
-              <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#itemSearchModal" @click="setSelectedItemIndex(index)">
+              <button type="button" class="btn btn-outline-secondary" @click="openItemSearchModal(index)">
                 검색
               </button>
             </div>
@@ -83,6 +83,12 @@ const returnForm = ref({
 const successMessage = ref('');
 const errorMessage = ref('');
 const selectedItemIndex = ref(null);
+const itemSearchModal = ref(null);
+
+function openItemSearchModal(index) {
+  selectedItemIndex.value = index;
+  itemSearchModal.value.showModal();
+}
 
 function addItem() {
   returnForm.value.items.push({ itemId: null, itemName: '', qty: null });
@@ -90,10 +96,6 @@ function addItem() {
 
 function removeItem(index) {
   returnForm.value.items.splice(index, 1);
-}
-
-function setSelectedItemIndex(index) {
-  selectedItemIndex.value = index;
 }
 
 function handleItemSelect(item) {
