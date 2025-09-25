@@ -173,7 +173,6 @@ const menuItems = [
         children: [
           { label: "발주 등록", to: "/request-orders?view=create" },
           { label: "발주 조회", to: "/request-orders?view=list" },
-          { label: "발주 현황", to: "/users/list" },
         ],
       },
       {
