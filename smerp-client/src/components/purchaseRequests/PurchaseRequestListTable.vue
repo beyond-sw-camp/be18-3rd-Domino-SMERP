@@ -11,40 +11,41 @@
         {{ error }}
       </div>
 
-      <table v-else-if="productionResults.length > 0" class="table table-hover">
+      <table v-else-if="purchaseRequests.length > 0" class="table table-hover">
         <thead class="table-light">
           <tr>
-            <th scope="col">ID</th>
             <th scope="col">문서 번호</th>
-            <th scope="col">공장명</th>
+            <th scope="col">담당자 사번</th>
             <th scope="col">품목명</th>
-            <th scope="col">규격</th>
-            <th scope="col">수량</th>
-            <th scope="col">비고</th>
+            <th scope="col">총 수량</th>
+            <th scope="col">납기일</th>
+            <th scope="col">상태</th>
+            <th scope="col">생성일</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="result in productionResults" :key="result.id">
-            <td>{{ result.id }}</td>
-            <td>{{ result.documentNo }}</td>
-            <td>{{ result.factoryName || 'N/A' }}</td>
-            <td>{{ result.itemName }}</td>
-            <td>{{ result.specification }}</td>
-            <td>{{ result.qty }}</td>
-            <td>{{ result.remark }}</td>
+          <tr v-for="request in purchaseRequests" :key="request.documentNo">
+            <td>{{ request.documentNo }}</td>
+            <td>{{ request.empNo }}</td>
+            <td>{{ request.itemName }}</td>
+            <td>{{ request.totalQty }}</td>
+            <td>{{ request.deliveryDate }}</td>
+            <td>{{ request.status }}</td>
+            <td>{{ request.createdAt }}</td>
           </tr>
         </tbody>
-        <tfoot>
-          <tr>
-            <th colspan="6" class="text-end">총 수량:</th>
-            <th>{{ totalQty }}</th>
-            <th colspan="2"></th>
-          </tr>
-        </tfoot>
       </table>
 
       <div v-else class="text-center text-muted">
-        표시할 생산 실적이 없습니다.
+        표시할 구매 요청이 없습니다.
+      </div>
+
+      <div v-if="totalPages > 1" class="mt-4">
+        <Pagination
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          @page-changed="handlePageChange"
+        />
       </div>
     </div>
   </div>
@@ -52,42 +53,40 @@
 
 <script setup>
 import { ref, onMounted, defineExpose } from "vue";
-import { fetchProductionResults } from "@/api/productionResult";
+import { fetchPurchaseRequests } from "@/api/purchaseRequest";
+import Pagination from "@/components/common/Pagination.vue";
 
-const productionResults = ref([]);
-const totalQty = ref(0);
+const purchaseRequests = ref([]);
 const loading = ref(true);
 const error = ref(null);
+const currentPage = ref(0);
+const totalPages = ref(0);
+const pageSize = ref(20);
 
-function escapeCsvField(field) {
-  if (field === null || field === undefined) {
-    return '';
-  }
-  let stringField = String(field);
-  if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
-    return `"${stringField.replace(/"/g, '""')}"`;
-  }
-  return stringField;
-}
-
-async function load() {
+async function load(page = 0) {
   loading.value = true;
   error.value = null;
   try {
-    const res = await fetchProductionResults(); // No pagination
-    productionResults.value = res.data.productionResultResponses;
-    totalQty.value = res.data.totalQty;
+    const res = await fetchPurchaseRequests(page, pageSize.value);
+    purchaseRequests.value = res.data.content;
+    currentPage.value = res.data.page;
+    totalPages.value = res.data.totalPages;
   } catch (e) {
     console.error(e);
-    error.value = "생산 실적 정보를 불러오는 데 실패했습니다.";
+    error.value = "구매 요청 정보를 불러오는 데 실패했습니다.";
   } finally {
     loading.value = false;
   }
 }
 
+function handlePageChange(page) {
+  currentPage.value = page;
+  load(page);
+}
+
 onMounted(() => load());
 
-defineExpose({ load, productionResults, totalQty });
+defineExpose({ load, purchaseRequests }); // Expose load method and data for parent component
 </script>
 
 <style scoped>

@@ -20,6 +20,7 @@ const router = createRouter({
     { path: "/purchase-requests", component: () => import("@/pages/purchaseRequests/PurchaseRequestPage.vue"), meta: { requiresAuth: true } },
     { path: "/purchase-orders", component: () => import("@/pages/purchaseOrders/PurchaseOrderPage.vue"), meta: { requiresAuth: true } },
     { path: "/purchase-orders/:poId", name: "PurchaseOrderDetail", component: () => import("@/pages/purchaseOrders/PurchaseOrderDetailPage.vue"), props: true, meta: { requiresAuth: true } },
+    { path: "/purchase-orders/summary", component: () => import("@/pages/purchaseOrders/PurchaseOrderSummaryPage.vue"), meta: { requiresAuth: true } },
     { path: "/work-orders", component: () => import("@/pages/workOrders/WorkOrderPage.vue"), meta: { requiresAuth: true } },
     { path: "/work-orders/status", component: () => import("@/pages/workOrders/WorkOrderStatusPage.vue"), meta: { requiresAuth: true } },
     { path: "/work-orders/:id", name: "WorkOrderDetail", component: () => import("@/pages/workOrders/WorkOrderDetailPage.vue"), props: true, meta: { requiresAuth: true } },

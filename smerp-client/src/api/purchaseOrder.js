@@ -19,3 +19,9 @@ export function fetchPurchaseOrderDetail(poId) {
 export function updatePurchaseOrder(poId, orderData) {
   return http.patch(`/api/v1/purchase-orders/${poId}`, orderData);
 }
+
+// 구매 주문 요약 조회
+export function fetchPurchaseOrderSummary() {
+  return http.get("/api/v1/purchase-orders/summary");
+}
+

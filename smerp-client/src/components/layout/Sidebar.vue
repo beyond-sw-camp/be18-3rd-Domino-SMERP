@@ -165,7 +165,7 @@ const menuItems = [
           
           { label: "구매 등록", to: "/purchase-orders?view=create" },
           { label: "구매 조회", to: "/purchase-orders?view=list" },
-          { label: "구매 현황", to: "/users/list" },
+          { label: "구매 현황", to: "/purchase-orders/summary" },
         ],
       },
       {
@@ -214,46 +214,13 @@ const menuItems = [
     ],
   },
   {
-    label: "기타 관리",
-    icon: "bi bi-arrow-left-right",
-    children: [
-      {
-        label: "불량처리",
-        children: [
-          { label: "불량 등록", to: "/users/create" },
-          { label: "불량 조회", to: "/users/list" },
-          { label: "불량 현황", to: "/users/list" },
-        ],
-      },
-      {
-        label: "재고실사",
-        children: [
-          { label: "재고 등록", to: "/users/create" },
-          { label: "재고 조회", to: "/users/list" },
-          { label: "재고 현황", to: "/users/list" },
-        ],
-      },
-      {
-        label: "창고이동",
-        children: [
-          { label: "창고 이동 등록", to: "/users/create" },
-          { label: "창고 이동 조회", to: "/users/list" },
-          { label: "창고 이동 현황", to: "/users/list" },
-        ],
-      },
-    ],
-  },
-  {
     label: "통계 및 로그",
     icon: "bi bi-printer",
     children: [
-      { label: "판매 현황", to: "/print/voucher" },
-      { label: "구매 현황", to: "/print/stock" },
-      { label: "생산 현황", to: "/print/stock" },
-      { label: "불량 현황", to: "/print/stock" },
-      { label: "창고 이동 현황", to: "/print/stock" },
-      { label: "재고 현황", to: "/print/stock" },
-      { label: "재고 수불부", to: "/print/stock" },
+      { label: "판매 현황", to: "/sales/summary" },
+      { label: "구매 현황", to: "/purchase-orders/summary" },
+      { label: "생산 현황", to: "/production-results" },
+      { label: "주문 현황", to: "/orders/summary" },
       { label: "로그 목록", to: "/logs" },
     ],
   },

@@ -19,7 +19,7 @@ const props = defineProps({
 });
 
 const depthPadding = computed(() => {
-    return `${props.node.depth * 20 + 8}px`;
+    return `${props.node.depth * 20 + 16}px`; // Adjust padding to match table cell padding
 });
 
 const depthColor = computed(() => {
@@ -36,8 +36,10 @@ const formatCurrency = (value) => {
 
 <style scoped>
 td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+  border-top: 1px solid #eef1f6 !important;
+  padding: 14px 16px;
+  vertical-align: middle;
+  color: #334155;
+  font-size: 0.9rem;
 }
 </style>

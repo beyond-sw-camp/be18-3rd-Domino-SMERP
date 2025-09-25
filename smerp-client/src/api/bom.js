@@ -82,3 +82,4 @@ export function rebuildAllBomCache() {
 export function refreshBomCache(itemId) {
   return http.post(`/api/v1/boms/cache/refresh/${itemId}`);
 }
+

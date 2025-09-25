@@ -18,6 +18,7 @@
             <button class="btn btn-outline-secondary" @click="switchView('list')">목록</button>
             <button class="btn btn-outline-secondary" @click="switchView('create')">추가</button>
             <button class="btn btn-primary" @click="reloadIfPossible">새로고침</button>
+            <button v-if="activeComp === Views.list" class="btn btn-success btn-sm" @click="exportToExcel">엑셀 내보내기</button>
           </div>
         </div>
 
@@ -43,13 +44,15 @@ import { useUserStore } from "@/stores/user";
 import { defineAsyncComponent, shallowRef, watch } from "vue";
 
 const Views = {
-  // list: defineAsyncComponent(() => import("@/components/purchaseRequests/PurchaseRequestListTable.vue")), // Will be created later
+  list: defineAsyncComponent(() => import("@/components/purchaseRequests/PurchaseRequestListTable.vue")),
   create: defineAsyncComponent(() => import("@/components/purchaseRequests/CreatePurchaseRequestForm.vue")),
 };
 
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
+
+const activeRef = shallowRef(null);
 
 const breadcrumbs = [
   { label: "HOME", to: "/home" },
@@ -73,13 +76,55 @@ async function onLogout() {
   }
 }
 
+function escapeCsvField(field) {
+  if (field === null || field === undefined) {
+    return '';
+  }
+  let stringField = String(field);
+  if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+    return `"${stringField.replace(/"/g, '""')}"`;
+  }
+  return stringField;
+}
+
+const exportToExcel = () => {
+  const purchaseRequests = activeRef.value?.purchaseRequests || [];
+
+  if (purchaseRequests.length === 0) {
+    alert("내보낼 데이터가 없습니다.");
+    return;
+  }
+
+  const headers = ["문서 번호", "담당자 사번", "품목명", "총 수량", "납기일", "상태", "생성일"];
+  const rows = purchaseRequests.map(request => [
+    escapeCsvField(request.documentNo),
+    escapeCsvField(request.empNo),
+    escapeCsvField(request.itemName),
+    escapeCsvField(request.totalQty),
+    escapeCsvField(request.deliveryDate),
+    escapeCsvField(request.status),
+    escapeCsvField(request.createdAt),
+  ]);
+
+  let csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
+    + headers.join(",") + "\n"
+    + rows.map(e => e.join(",")).join("\n");
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "구매요청_목록.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 /** 동적 컴포넌트 스위칭 */
-const activeComp = shallowRef(Views.create); // Default to create view for now
-const activeRef = shallowRef(null);
+const activeComp = shallowRef(Views.list); // Default to list view
 
 function updateActiveComp() {
-  const view = route.query.view || 'create'; // Default to create view for now
-  activeComp.value = Views[view] ?? Views.create;
+  const view = route.query.view || 'list'; // Default to list view
+  activeComp.value = Views[view] ?? Views.list;
 }
 
 watch(() => route.query.view, updateActiveComp, { immediate: true });
@@ -90,7 +135,9 @@ function switchView(key) {
 
 /** 현재 활성 컴포넌트에 reload 메서드가 있으면 호출 */
 function reloadIfPossible() {
-  // activeRef.value?.load?.(); // No load method for create form
+  if (activeComp.value === Views.list) {
+    activeRef.value?.load?.();
+  }
 }
 
 function switchToListView() {
@@ -100,7 +147,7 @@ function switchToListView() {
 function handleSave() {
   switchView('list');
   setTimeout(() => {
-    // reloadIfPossible(); // No reload for list view yet
+    reloadIfPossible();
   }, 100);
 }
 </script>

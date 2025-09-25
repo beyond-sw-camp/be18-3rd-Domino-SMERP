@@ -16,6 +16,7 @@
           <h5 class="mb-0">생산 실적 조회</h5>
           <div class="d-flex gap-2">
             <button class="btn btn-primary" @click="reloadIfPossible">새로고침</button>
+            <button class="btn btn-success btn-sm" @click="exportToExcel"><i class="bi bi-file-earmark-excel"></i>엑셀 내보내기</button>
           </div>
         </div>
 
@@ -48,9 +49,11 @@ const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
 
+const activeRef = shallowRef(null);
+
 const breadcrumbs = [
   { label: "HOME", to: "/home" },
-  { label: "생산 관리", to: "/production" },
+  { label: "생산 관리", to: "#" },
   { label: "생산 실적 조회" },
 ];
 
@@ -70,9 +73,66 @@ async function onLogout() {
   }
 }
 
+function escapeCsvField(field) {
+  if (field === null || field === undefined) {
+    return '';
+  }
+  let stringField = String(field);
+  if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+    return `"${stringField.replace(/"/g, '""')}"`;
+  }
+  return stringField;
+}
+
+const exportToExcel = () => {
+  const productionResults = activeRef.value?.productionResults || [];
+  const totalQty = activeRef.value?.totalQty || 0;
+
+  if (productionResults.length === 0) {
+    alert("내보낼 데이터가 없습니다.");
+    return;
+  }
+
+  const headers = ["ID", "문서 번호", "공장명", "품목명", "규격", "수량", "비고"];
+  const rows = productionResults.map(result => [
+    escapeCsvField(result.id),
+    escapeCsvField(result.documentNo),
+    escapeCsvField(result.factoryName || 'N/A'),
+    escapeCsvField(result.itemName),
+    escapeCsvField(result.specification),
+    escapeCsvField(result.qty),
+    escapeCsvField(result.remark),
+  ]);
+
+  let csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers.join(",") + "\n";
+  rows.forEach(row => {
+    csvContent += row.join(",") + "\n";
+  });
+
+  // Add total quantity to the CSV
+  csvContent += [
+    escapeCsvField(""),
+    escapeCsvField(""),
+    escapeCsvField(""),
+    escapeCsvField(""),
+    escapeCsvField(""),
+    escapeCsvField("총 수량:"),
+    escapeCsvField(totalQty),
+    escapeCsvField(""),
+    escapeCsvField(""),
+  ].join(",") + "\n";
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "생산실적현황.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 /** 동적 컴포넌트 스위칭 */
 const activeComp = shallowRef(Views.list);
-const activeRef = shallowRef(null);
 
 function updateActiveComp() {
   const view = route.query.view || 'list';
