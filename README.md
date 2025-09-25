@@ -63,6 +63,7 @@
 <details>
  <a href="https://www.figma.com/design/ExNHg393ExldbNN0TACTIc/Project-SMERP?node-id=0-1&t=4y6ryU68AoMk8w1V-1">화면 및 기능 설계서</a>
 </div>
+  <img width="1631" height="776" alt="image" src="https://github.com/user-attachments/assets/299af1d8-abb4-4914-8fc4-888add94d37e" />
 </details>
 <br>
 
@@ -218,6 +219,7 @@
 <details>
  <a href="https://docs.google.com/spreadsheets/d/1atr55TXd0Bk1su-PHP-4pP_yuwYqgyo55p04q3iMQh0/edit?gid=1193520092#gid=1193520092">UI/UX 단위 테스트 결과서</a>
 </div>
+  <img width="1351" height="731" alt="image" src="https://github.com/user-attachments/assets/dd1295f9-c2bb-4ae7-8b24-57ee8856b1e7" />
 </details>
 <br>
 
