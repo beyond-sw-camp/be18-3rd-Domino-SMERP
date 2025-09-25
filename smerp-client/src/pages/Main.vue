@@ -53,7 +53,9 @@
             <h6 class="fw-bold mb-3">Your Shortcuts</h6>
             <div class="row g-3">
               <div class="col-6 col-md-4">
-                <div class="ws-box">BOM ↗</div>
+                <router-link to="/boms" class="ws-box">
+                  BOM ↗
+                </router-link>
               </div>
               <div class="col-6 col-md-4">
                 <div class="ws-box">Production Plan ↗</div>

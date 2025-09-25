@@ -209,7 +209,8 @@ const menuItems = [
         to: "/production-results",
       },
       { label: "LOT 조회", to: "/lots" },
-      { label: "소요량계산", to: "/boms" },
+      { label: "BOM 조회", to: "/boms" },
+      { label: "소요량계산", to: "/boms/requirements" },
     ],
   },
   {

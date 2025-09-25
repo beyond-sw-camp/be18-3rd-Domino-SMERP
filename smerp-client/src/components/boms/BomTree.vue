@@ -22,6 +22,7 @@
 import BomTreeNode from './BomTreeNode.vue';
 import { onMounted } from 'vue';
 
+
 const props = defineProps({
     bomData: Object
 });
