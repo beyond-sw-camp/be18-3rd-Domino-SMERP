@@ -220,7 +220,14 @@ const menuItems = [
       { label: "구매 현황", to: "/purchase-orders/summary" },
       { label: "생산 현황", to: "/production-results" },
       { label: "주문 현황", to: "/orders/summary" },
-      { label: "로그 목록", to: "/logs" },
+      {
+        label: "로그",
+        children: [
+          { label: "API 로그", to: "/logs?view=apis" },
+          { label: "에러 로그", to: "/logs?view=errors" },
+          { label: "행위 로그", to: "/logs?view=action" }
+        ]
+      },
     ],
   },
 ];

@@ -1,11 +1,19 @@
 import http from "./http";
 
-// 로그 목록 조회
-export function fetchLogs() {
-  return http.get("/api/v1/logs");
+// API 로그
+export function fetchApiLogs(params = {}) {
+  return http.get("/api/v1/logs/apis", { params });
 }
 
-// 로그 상세 조회
-export function fetchLogDetail(logId) {
-  return http.get(`/api/v1/logs/${logId}`);
+// 에러 로그
+export function fetchErrorLogs(params = {}) {
+  return http.get("/api/v1/logs/errors", { params });
+}
+
+export function fetchActionLogs(params = {}) {
+  return http.get("/api/v1/logs/actions", { params });
+}
+
+export function fetchActionLogDetail(id) {
+  return http.get(`/api/v1/logs/actions/${id}`);
 }

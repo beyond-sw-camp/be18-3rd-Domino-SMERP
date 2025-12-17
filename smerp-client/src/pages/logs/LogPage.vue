@@ -40,7 +40,15 @@ import { defineAsyncComponent, shallowRef, watch } from "vue";
 
 
 const Views = {
-  list: defineAsyncComponent(() => import("@/components/logs/LogListTable.vue")),
+  apis: defineAsyncComponent(() =>
+    import("@/components/logs/ApiLogTable.vue")
+  ),
+  errors: defineAsyncComponent(() =>
+    import("@/components/logs/ErrorLogTable.vue")
+  ),
+  action: defineAsyncComponent(() =>
+    import("@/components/logs/ActionLogTable.vue")
+  ),
 };
 
 const router = useRouter();
@@ -77,12 +85,12 @@ async function onLogout() {
 }
 
 /** 동적 컴포넌트 스위칭 */
-const activeComp = shallowRef(Views.list);
+const activeComp = shallowRef(Views.apis);
 const activeRef = shallowRef(null);
 
 function updateActiveComp() {
-  const view = route.query.view || 'list';
-  activeComp.value = Views[view] ?? Views.list;
+  const view = route.query.view || "api";
+  activeComp.value = Views[view] ?? Views.apis;
 }
 
 

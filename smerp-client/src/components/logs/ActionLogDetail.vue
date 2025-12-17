@@ -17,16 +17,17 @@
         <div class="row mb-3">
           <div class="col-md-4">
             <label class="form-label fw-bold">시간</label>
-            <p class="form-control-static">{{ log.doAt }}</p>
+            <p class="form-control-static">{{ log.timestamp }}</p>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4">  
             <label class="form-label fw-bold">엔티티</label>
             <p class="form-control-static">{{ log.entity }}</p>
           </div>
         </div>
+
         <div class="row mb-3">
           <div class="col-md-4">
-            <label class="form-label fw-bold">작업</label>
+            <label class="form-label fw-bold">행위</label>
             <p class="form-control-static">{{ log.action }}</p>
           </div>
           <div class="col-md-4">
@@ -35,19 +36,21 @@
           </div>
         </div>
 
-        <hr class="my-4">
+        <hr class="my-4" />
 
-        <div class="alert alert-info d-flex align-items-center" role="alert">
-          <i class="bi bi-info-circle-fill me-2"></i>
-          <div>
-            변경사항은 하늘색으로 표시됩니다.
-          </div>
+        <div class="alert alert-info">
+          변경된 필드는 <strong>파란색</strong>으로 표시됩니다.
         </div>
-        <LogDataDiff :before-data="log.beforeData" :after-data="log.afterData" />
 
-        <!-- Buttons -->
-        <div class="d-flex justify-content-end gap-2 mt-4">
-          <button type="button" class="btn btn-outline-secondary" @click="cancel">목록으로</button>
+        <LogDataDiff
+          :before-data="log.beforeData"
+          :after-data="log.afterData"
+        />
+
+        <div class="d-flex justify-content-end mt-4">
+          <button class="btn btn-outline-secondary" @click="cancel">
+            목록으로
+          </button>
         </div>
       </div>
 
@@ -59,9 +62,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { fetchLogDetail } from "@/api/log";
+import { ref, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
+import { fetchActionLogDetail } from "@/api/log";
 import LogDataDiff from "@/components/logs/LogDataDiff.vue";
 
 const props = defineProps({
@@ -79,35 +82,23 @@ const error = ref(null);
 async function loadLogDetail(id) {
   loading.value = true;
   error.value = null;
+
   try {
-    const response = await fetchLogDetail(id);
-    log.value = response.data;
+    const { data } = await fetchActionLogDetail(id);
+    log.value = data;
   } catch (e) {
-    console.error('Error fetching log details:', e);
-    error.value = '로그 정보를 불러오는 데 실패했습니다.';
+    console.error(e);
+    error.value = "로그 정보를 불러오는 데 실패했습니다.";
   } finally {
     loading.value = false;
   }
 }
 
-
-
-onMounted(() => {
-  if (props.logId) {
-    loadLogDetail(props.logId);
-  }
-});
-
-watch(() => props.logId, (newLogId) => {
-  if (newLogId) {
-    loadLogDetail(newLogId);
-  } else {
-    log.value = null;
-  }
-});
+onMounted(() => loadLogDetail(props.logId));
+watch(() => props.logId, loadLogDetail);
 
 function cancel() {
-  router.push('/logs');
+  router.push("/logs?view=action");
 }
 </script>
 

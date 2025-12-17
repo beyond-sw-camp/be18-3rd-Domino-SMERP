@@ -33,7 +33,11 @@ const router = createRouter({
     { path: "/clients", component: () => import("@/pages/clients/ClientPage.vue") },
     { path: "/clients/:clientId", name: "ClientDetail", component: () => import("@/pages/clients/ClientDetailPage.vue"), props: true },
     { path: "/logs", component: () => import("@/pages/logs/LogPage.vue") },
-    { path: "/logs/:logId", name: "LogDetail", component: () => import("@/pages/logs/LogDetailPage.vue"), props: true },
+    {
+      path: "/logs/actions/:logId",
+      component: () => import("@/pages/logs/LogDetailPage.vue"),
+      props: true,
+    },
     { path: "/items", component: () => import("@/pages/items/ItemPage.vue") },
     { path: "/items/:itemId", name: "ItemDetail", component: () => import("@/pages/items/ItemDetailPage.vue"), props: true },
     { path: "/boms", component: () => import("@/pages/boms/BomPage.vue"), meta: { requiresAuth: true } },

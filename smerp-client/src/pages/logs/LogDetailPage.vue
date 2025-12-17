@@ -8,45 +8,36 @@
         @logout="onLogout"
       />
       <main class="content container-fluid py-3">
-        <LogDetail :log-id="logId" />
+        <ActionLogDetail :log-id="logId" />
       </main>
     </div>
   </div>
 </template>
 
 <script setup>
-import Header from "@/components/layout/Header.vue";
 import Sidebar from "@/components/layout/Sidebar.vue";
-import LogDetail from "@/components/logs/LogDetail.vue";
+import Header from "@/components/layout/Header.vue";
+import ActionLogDetail from "@/components/logs/ActionLogDetail.vue";
 import { useUserStore } from "@/stores/user";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { logout as apiLogout } from "@/api/auth";
-import { ref } from "vue";
 
-const props = defineProps({
-  logId: {
-    type: String,
-    required: true,
-  },
-});
-
-const userStore = useUserStore();
+const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 
-const breadcrumbs = ref([
+const logId = route.params.logId;
+
+const breadcrumbs = [
   { label: "HOME", to: "/home" },
-  { label: "통계 및 로그", to: "/logs" },
-  { label: "로그 상세" },
-]);
+  { label: "통계 및 로그", to: "/logs?view=action" },
+  { label: "행위 로그 상세" },
+];
 
 async function onLogout() {
-  try {
-    await apiLogout();
-    userStore.clear();
-    router.push("/login");
-  } catch (error) {
-    console.error("Logout failed:", error);
-  }
+  await apiLogout();
+  userStore.clear();
+  router.push("/login");
 }
 </script>
 
